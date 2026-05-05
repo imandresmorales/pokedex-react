@@ -1,0 +1,112 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
+
+/* ===== CSS Design Tokens ===== */
+:root {
+  /* Dark Theme (Default) */
+  --bg-primary: #0f0f14;
+  --bg-secondary: #16161d;
+  --card-bg: #1c1c26;
+  --header-bg: rgba(15, 15, 20, 0.85);
+  --border-color: rgba(255, 255, 255, 0.08);
+  --hover-bg: rgba(255, 255, 255, 0.06);
+
+  --text-primary: #f0f0f5;
+  --text-secondary: #b0b0c0;
+  --text-muted: #6b6b80;
+
+  --accent-primary: #dc2626;
+  --accent-glow: rgba(220, 38, 38, 0.25);
+
+  /* Type Colors as CSS variables */
+  --color-normal: #A8A77A;
+  --color-fire: #EE8130;
+  --color-water: #6390F0;
+  --color-electric: #F7D02C;
+  --color-grass: #7AC74C;
+  --color-ice: #96D9D6;
+  --color-fighting: #C22E28;
+  --color-poison: #A33EA1;
+  --color-ground: #E2BF65;
+  --color-flying: #A98FF3;
+  --color-psychic: #F95587;
+  --color-bug: #A6B91A;
+  --color-rock: #B6A136;
+  --color-ghost: #735797;
+  --color-dragon: #6F35FC;
+  --color-dark: #705746;
+  --color-steel: #B7B7CE;
+  --color-fairy: #D685AD;
+}
+
+/* ===== Reset & Base ===== */
+*,
+*::before,
+*::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  min-height: 100vh;
+  line-height: 1.5;
+}
+
+/* Subtle grain texture */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  opacity: 0.03;
+  background: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+  pointer-events: none;
+  z-index: 0;
+}
+
+#root {
+  position: relative;
+  z-index: 1;
+}
+
+/* ===== Scrollbar ===== */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--bg-primary);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--border-color);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--text-muted);
+}
+
+/* ===== Utility ===== */
+img {
+  max-width: 100%;
+  display: block;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+button {
+  cursor: pointer;
+  font-family: inherit;
+}
