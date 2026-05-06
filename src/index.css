@@ -38,6 +38,23 @@
   --color-fairy: #D685AD;
 }
 
+/* ===== Light Theme Tokens ===== */
+[data-theme='light'] {
+  --bg-primary: #f5f5f8;
+  --bg-secondary: #eeeef3;
+  --card-bg: #ffffff;
+  --header-bg: rgba(245, 245, 248, 0.88);
+  --border-color: rgba(0, 0, 0, 0.09);
+  --hover-bg: rgba(0, 0, 0, 0.04);
+
+  --text-primary: #111118;
+  --text-secondary: #44445a;
+  --text-muted: #7777a0;
+
+  --accent-primary: #dc2626;
+  --accent-glow: rgba(220, 38, 38, 0.2);
+}
+
 /* ===== Reset & Base ===== */
 *,
 *::before,
@@ -59,6 +76,7 @@ body {
   color: var(--text-primary);
   min-height: 100vh;
   line-height: 1.5;
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 /* Subtle grain texture */
