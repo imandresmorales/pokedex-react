@@ -37,8 +37,8 @@ export default function Home() {
 
   if (loading) {
     return (
-      <div className="loading-container">
-        <div className="loading-pokeball">
+      <div className="loading-container" role="status" aria-live="polite" aria-label="Loading Pokémon">
+        <div className="loading-pokeball" aria-hidden="true">
           <div className="pokeball-spin">
             <div className="spin-top"></div>
             <div className="spin-divider"><div className="spin-button"></div></div>
@@ -51,45 +51,63 @@ export default function Home() {
   }
 
   return (
-    <main className="home-page" id="home-page">
-      <SearchBar
-        value={search}
-        onChange={setSearch}
-        onTypeFilter={setActiveType}
-        types={ALL_TYPES}
-        activeType={activeType}
-      />
+    <>
+      {/* Skip to main content — accessibility for keyboard users */}
+      <a href="#pokemon-grid" className="skip-link">Skip to Pokémon list</a>
 
-      {filtered.length === 0 ? (
-        <div className="no-results">
-          <p>No Pokémon found matching your search.</p>
-        </div>
-      ) : (
-        <>
-          <div className="pokemon-grid" id="pokemon-grid">
-            {filtered.map((p) => (
-              <PokemonCard key={p.id} pokemon={p} />
-            ))}
+      <main className="home-page" id="home-page">
+        <SearchBar
+          value={search}
+          onChange={setSearch}
+          onTypeFilter={setActiveType}
+          types={ALL_TYPES}
+          activeType={activeType}
+        />
+
+        {/* Live region announces result count to screen readers */}
+        <p className="sr-only" role="status" aria-live="polite">
+          {filtered.length} Pokémon found
+        </p>
+
+        {filtered.length === 0 ? (
+          <div className="no-results" role="alert">
+            <p>No Pokémon found matching your search.</p>
           </div>
-
-          {hasMore && !search && !activeType && (
-            <div className="load-more-wrapper">
-              <button
-                className="load-more-btn"
-                onClick={loadMore}
-                disabled={loadingMore}
-                id="load-more-btn"
-              >
-                {loadingMore ? (
-                  <span className="btn-loading">Loading...</span>
-                ) : (
-                  'Load More Pokémon'
-                )}
-              </button>
+        ) : (
+          <>
+            <div
+              className="pokemon-grid"
+              id="pokemon-grid"
+              role="list"
+              aria-label={`${filtered.length} Pokémon${activeType ? ` of type ${activeType}` : ''}`}
+            >
+              {filtered.map((p) => (
+                <div key={p.id} role="listitem">
+                  <PokemonCard pokemon={p} />
+                </div>
+              ))}
             </div>
-          )}
-        </>
-      )}
-    </main>
+
+            {hasMore && !search && !activeType && (
+              <div className="load-more-wrapper">
+                <button
+                  className="load-more-btn"
+                  onClick={loadMore}
+                  disabled={loadingMore}
+                  id="load-more-btn"
+                  aria-label={loadingMore ? 'Loading more Pokémon' : 'Load more Pokémon'}
+                >
+                  {loadingMore ? (
+                    <span aria-hidden="true">Loading...</span>
+                  ) : (
+                    'Load More Pokémon'
+                  )}
+                </button>
+              </div>
+            )}
+          </>
+        )}
+      </main>
+    </>
   );
 }
