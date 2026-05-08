@@ -1,0 +1,206 @@
+.not-found {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: calc(100vh - 70px);
+  padding: 2rem 1.5rem;
+}
+
+.not-found-inner {
+  text-align: center;
+  max-width: 480px;
+  animation: fadeInUp 0.5s ease;
+}
+
+/* ===== Animated Pokéball ===== */
+.nf-pokeball {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  overflow: hidden;
+  position: relative;
+  border: 4px solid var(--text-primary);
+  margin: 0 auto 1.5rem;
+  animation: pokeball-shake 2.5s ease-in-out infinite;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+}
+
+.nf-pokeball-top {
+  height: 50%;
+  background: #dc2626;
+}
+
+.nf-pokeball-bottom {
+  height: 50%;
+  background: var(--card-bg);
+  transition: background 0.3s ease;
+}
+
+.nf-pokeball-divider {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: var(--text-primary);
+  transform: translateY(-50%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2;
+}
+
+.nf-pokeball-button {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: var(--card-bg);
+  border: 4px solid var(--text-primary);
+  transition: background 0.3s ease;
+  animation: button-pulse 2.5s ease-in-out infinite;
+}
+
+/* Crack decoration */
+.nf-crack {
+  position: absolute;
+  background: var(--text-primary);
+  opacity: 0.15;
+  border-radius: 1px;
+}
+
+.nf-crack--1 {
+  width: 2px;
+  height: 25px;
+  top: 12%;
+  left: 35%;
+  transform: rotate(20deg);
+}
+
+.nf-crack--2 {
+  width: 2px;
+  height: 18px;
+  top: 20%;
+  left: 42%;
+  transform: rotate(-15deg);
+}
+
+@keyframes pokeball-shake {
+  0%, 100% { transform: rotate(0deg); }
+  10% { transform: rotate(-8deg); }
+  20% { transform: rotate(8deg); }
+  30% { transform: rotate(-5deg); }
+  40% { transform: rotate(5deg); }
+  50% { transform: rotate(0deg); }
+}
+
+@keyframes button-pulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(220, 38, 38, 0); }
+  50% { box-shadow: 0 0 0 6px rgba(220, 38, 38, 0.2); }
+}
+
+/* ===== Content ===== */
+.nf-code {
+  font-size: 6rem;
+  font-weight: 900;
+  line-height: 1;
+  background: linear-gradient(135deg, #dc2626, #f97316);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin-bottom: 0.5rem;
+  letter-spacing: -0.02em;
+}
+
+.nf-title {
+  font-size: 1.75rem;
+  font-weight: 800;
+  color: var(--text-primary);
+  margin-bottom: 1rem;
+}
+
+.nf-description {
+  font-size: 1rem;
+  color: var(--text-muted);
+  line-height: 1.7;
+  margin-bottom: 2rem;
+}
+
+/* ===== Buttons ===== */
+.nf-actions {
+  display: flex;
+  gap: 0.75rem;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.nf-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.75rem 1.75rem;
+  min-height: 48px;
+  border-radius: 3rem;
+  font-size: 0.95rem;
+  font-weight: 700;
+  font-family: inherit;
+  cursor: pointer;
+  text-decoration: none;
+  transition: all 0.3s ease;
+  border: 2px solid transparent;
+}
+
+.nf-btn--primary {
+  background: var(--accent-primary);
+  color: #fff;
+  border-color: var(--accent-primary);
+}
+
+.nf-btn--primary:hover {
+  background: transparent;
+  color: var(--accent-primary);
+  box-shadow: 0 4px 20px var(--accent-glow);
+}
+
+.nf-btn--secondary {
+  background: transparent;
+  color: var(--text-secondary);
+  border-color: var(--border-color);
+}
+
+.nf-btn--secondary:hover {
+  border-color: var(--text-muted);
+  color: var(--text-primary);
+  transform: translateY(-1px);
+}
+
+.nf-btn:focus-visible {
+  outline: 2px solid var(--accent-primary);
+  outline-offset: 3px;
+}
+
+/* ===== Animation ===== */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(24px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (max-width: 400px) {
+  .nf-code {
+    font-size: 4.5rem;
+  }
+
+  .nf-title {
+    font-size: 1.4rem;
+  }
+
+  .nf-actions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+}
