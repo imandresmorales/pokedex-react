@@ -5,6 +5,7 @@ import { useEvolutionChain } from '../hooks/useEvolutionChain';
 import TypeBadge from '../components/TypeBadge/TypeBadge';
 import StatsChart from '../components/StatsChart/StatsChart';
 import EvolutionChain from '../components/EvolutionChain/EvolutionChain';
+import CryButton from '../components/CryButton/CryButton';
 import { DetailSeo } from '../components/Seo/Seo';
 import { typeColors } from '../utils/typeColors';
 import './Detail.css';
@@ -89,6 +90,7 @@ export default function Detail() {
             {species?.genus && (
               <span className="detail-genus">{species.genus}</span>
             )}
+            <CryButton pokemonId={pokemon.id} pokemonName={pokemon.name} />
             <div className="detail-types">
               {pokemon.types.map((t) => (
                 <TypeBadge key={t.type.name} type={t.type.name} />
