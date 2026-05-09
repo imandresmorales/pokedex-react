@@ -3,6 +3,7 @@ import { usePokemonList } from '../hooks/usePokemonList';
 import PokemonCard from '../components/PokemonCard/PokemonCard';
 import SkeletonCard from '../components/SkeletonCard/SkeletonCard';
 import SearchBar from '../components/SearchBar/SearchBar';
+import { HomeSeo } from '../components/Seo/Seo';
 import './Home.css';
 
 const ALL_TYPES = [
@@ -38,6 +39,7 @@ export default function Home() {
 
   return (
     <>
+      <HomeSeo />
       {/* Skip to main content — keyboard accessibility */}
       <a href="#pokemon-grid" className="skip-link">Skip to Pokémon list</a>
 

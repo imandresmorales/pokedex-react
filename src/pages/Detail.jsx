@@ -2,6 +2,7 @@ import { useParams, Link } from 'react-router-dom';
 import { usePokemonDetail } from '../hooks/usePokemonDetail';
 import TypeBadge from '../components/TypeBadge/TypeBadge';
 import StatsChart from '../components/StatsChart/StatsChart';
+import { DetailSeo } from '../components/Seo/Seo';
 import { typeColors } from '../utils/typeColors';
 import './Detail.css';
 
@@ -39,6 +40,7 @@ export default function Detail() {
 
   return (
     <main className="detail-page" id="detail-page">
+      <DetailSeo pokemon={pokemon} species={species} />
       <div className="detail-hero" style={{ background: `linear-gradient(180deg, ${typeColor}30, transparent)` }}>
         <div className="detail-nav">
           <Link to="/" className="back-btn" id="back-btn">
@@ -80,7 +82,7 @@ export default function Detail() {
             <div className="artwork-bg" style={{ background: `radial-gradient(circle, ${typeColor}25, transparent 70%)` }}></div>
             <img
               src={pokemon.sprites.other['official-artwork'].front_default}
-              alt={pokemon.name}
+              alt={`${pokemon.name} — #${String(pokemon.id).padStart(3, '0')} ${pokemon.types.map(t => t.type.name).join(' / ')} type Pokémon`}
               className="detail-artwork"
             />
           </div>
