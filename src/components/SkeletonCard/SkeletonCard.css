@@ -1,0 +1,63 @@
+.skeleton-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 1.5rem 1rem 1.25rem;
+  border-radius: 1.25rem;
+  background: var(--card-bg);
+  border: 1px solid var(--border-color);
+  gap: 0.6rem;
+  transition: background 0.3s ease;
+}
+
+.skeleton-number {
+  width: 40px;
+  height: 14px;
+  border-radius: 0.5rem;
+  align-self: flex-end;
+}
+
+.skeleton-image {
+  width: 110px;
+  height: 110px;
+  border-radius: 50%;
+}
+
+.skeleton-name {
+  width: 80px;
+  height: 16px;
+  border-radius: 0.5rem;
+  margin-top: 0.25rem;
+}
+
+.skeleton-types {
+  display: flex;
+  gap: 0.4rem;
+}
+
+.skeleton-badge {
+  width: 52px;
+  height: 22px;
+  border-radius: 2rem;
+}
+
+/* ===== Shimmer animation ===== */
+@keyframes shimmer {
+  0% {
+    background-position: -400px 0;
+  }
+  100% {
+    background-position: 400px 0;
+  }
+}
+
+.shimmer {
+  background: linear-gradient(
+    90deg,
+    var(--border-color) 25%,
+    var(--hover-bg) 50%,
+    var(--border-color) 75%
+  );
+  background-size: 800px 100%;
+  animation: shimmer 1.4s ease-in-out infinite;
+}

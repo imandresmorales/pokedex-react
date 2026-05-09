@@ -1,6 +1,7 @@
 import { useState, useMemo } from 'react';
 import { usePokemonList } from '../hooks/usePokemonList';
 import PokemonCard from '../components/PokemonCard/PokemonCard';
+import SkeletonCard from '../components/SkeletonCard/SkeletonCard';
 import SearchBar from '../components/SearchBar/SearchBar';
 import './Home.css';
 
@@ -10,6 +11,9 @@ const ALL_TYPES = [
   'rock', 'ghost', 'dragon', 'dark', 'steel', 'fairy',
 ];
 
+// Number of skeleton cards to show while loading
+const SKELETON_COUNT = 20;
+
 export default function Home() {
   const { pokemon, loading, loadingMore, hasMore, loadMore } = usePokemonList();
   const [search, setSearch] = useState('');
@@ -17,7 +21,6 @@ export default function Home() {
 
   const filtered = useMemo(() => {
     let result = pokemon;
-
     if (search) {
       const term = search.toLowerCase().trim();
       result = result.filter(
@@ -27,32 +30,15 @@ export default function Home() {
           String(p.id).padStart(3, '0').includes(term)
       );
     }
-
     if (activeType) {
       result = result.filter((p) => p.types.includes(activeType));
     }
-
     return result;
   }, [pokemon, search, activeType]);
 
-  if (loading) {
-    return (
-      <div className="loading-container" role="status" aria-live="polite" aria-label="Loading Pokémon">
-        <div className="loading-pokeball" aria-hidden="true">
-          <div className="pokeball-spin">
-            <div className="spin-top"></div>
-            <div className="spin-divider"><div className="spin-button"></div></div>
-            <div className="spin-bottom"></div>
-          </div>
-        </div>
-        <p className="loading-text">Loading Pokémon...</p>
-      </div>
-    );
-  }
-
   return (
     <>
-      {/* Skip to main content — accessibility for keyboard users */}
+      {/* Skip to main content — keyboard accessibility */}
       <a href="#pokemon-grid" className="skip-link">Skip to Pokémon list</a>
 
       <main className="home-page" id="home-page">
@@ -66,10 +52,21 @@ export default function Home() {
 
         {/* Live region announces result count to screen readers */}
         <p className="sr-only" role="status" aria-live="polite">
-          {filtered.length} Pokémon found
+          {loading ? 'Loading Pokémon…' : `${filtered.length} Pokémon found`}
         </p>
 
-        {filtered.length === 0 ? (
+        {/* Skeleton grid while loading */}
+        {loading ? (
+          <div
+            className="pokemon-grid"
+            id="pokemon-grid"
+            aria-label="Loading Pokémon"
+          >
+            {Array.from({ length: SKELETON_COUNT }).map((_, i) => (
+              <SkeletonCard key={i} />
+            ))}
+          </div>
+        ) : filtered.length === 0 ? (
           <div className="no-results" role="alert">
             <p>No Pokémon found matching your search.</p>
           </div>
@@ -86,6 +83,12 @@ export default function Home() {
                   <PokemonCard pokemon={p} />
                 </div>
               ))}
+
+              {/* Inline skeleton rows while loading more */}
+              {loadingMore &&
+                Array.from({ length: 10 }).map((_, i) => (
+                  <SkeletonCard key={`more-${i}`} />
+                ))}
             </div>
 
             {hasMore && !search && !activeType && (
@@ -97,11 +100,7 @@ export default function Home() {
                   id="load-more-btn"
                   aria-label={loadingMore ? 'Loading more Pokémon' : 'Load more Pokémon'}
                 >
-                  {loadingMore ? (
-                    <span aria-hidden="true">Loading...</span>
-                  ) : (
-                    'Load More Pokémon'
-                  )}
+                  {loadingMore ? 'Loading…' : 'Load More Pokémon'}
                 </button>
               </div>
             )}
