@@ -1,5 +1,6 @@
 import { useState, useMemo } from 'react';
 import { usePokemonList } from '../hooks/usePokemonList';
+import { useFavorites } from '../context/FavoritesContext';
 import PokemonCard from '../components/PokemonCard/PokemonCard';
 import SkeletonCard from '../components/SkeletonCard/SkeletonCard';
 import SearchBar from '../components/SearchBar/SearchBar';
@@ -12,16 +13,19 @@ const ALL_TYPES = [
   'rock', 'ghost', 'dragon', 'dark', 'steel', 'fairy',
 ];
 
-// Number of skeleton cards to show while loading
 const SKELETON_COUNT = 20;
 
 export default function Home() {
   const { pokemon, loading, loadingMore, hasMore, loadMore } = usePokemonList();
+  const { favorites } = useFavorites();
   const [search, setSearch] = useState('');
   const [activeType, setActiveType] = useState(null);
+  const [activeTab, setActiveTab] = useState('all'); // 'all' | 'favorites'
+
+  const sourceList = activeTab === 'favorites' ? favorites : pokemon;
 
   const filtered = useMemo(() => {
-    let result = pokemon;
+    let result = sourceList;
     if (search) {
       const term = search.toLowerCase().trim();
       result = result.filter(
@@ -35,15 +39,44 @@ export default function Home() {
       result = result.filter((p) => p.types.includes(activeType));
     }
     return result;
-  }, [pokemon, search, activeType]);
+  }, [sourceList, search, activeType]);
+
+  const showLoadMore =
+    activeTab === 'all' && hasMore && !search && !activeType;
 
   return (
     <>
       <HomeSeo />
-      {/* Skip to main content — keyboard accessibility */}
       <a href="#pokemon-grid" className="skip-link">Skip to Pokémon list</a>
 
       <main className="home-page" id="home-page">
+        {/* Tabs */}
+        <div className="home-tabs" role="tablist" aria-label="Pokémon list view">
+          <button
+            className={`home-tab ${activeTab === 'all' ? 'home-tab--active' : ''}`}
+            onClick={() => setActiveTab('all')}
+            role="tab"
+            aria-selected={activeTab === 'all'}
+            id="tab-all"
+            type="button"
+          >
+            All Pokémon
+          </button>
+          <button
+            className={`home-tab ${activeTab === 'favorites' ? 'home-tab--active' : ''}`}
+            onClick={() => setActiveTab('favorites')}
+            role="tab"
+            aria-selected={activeTab === 'favorites'}
+            id="tab-favorites"
+            type="button"
+          >
+            ❤️ Favorites
+            {favorites.length > 0 && (
+              <span className="tab-badge">{favorites.length}</span>
+            )}
+          </button>
+        </div>
+
         <SearchBar
           value={search}
           onChange={setSearch}
@@ -52,25 +85,23 @@ export default function Home() {
           activeType={activeType}
         />
 
-        {/* Live region announces result count to screen readers */}
         <p className="sr-only" role="status" aria-live="polite">
           {loading ? 'Loading Pokémon…' : `${filtered.length} Pokémon found`}
         </p>
 
-        {/* Skeleton grid while loading */}
-        {loading ? (
-          <div
-            className="pokemon-grid"
-            id="pokemon-grid"
-            aria-label="Loading Pokémon"
-          >
+        {loading && activeTab === 'all' ? (
+          <div className="pokemon-grid" id="pokemon-grid" aria-label="Loading Pokémon">
             {Array.from({ length: SKELETON_COUNT }).map((_, i) => (
               <SkeletonCard key={i} />
             ))}
           </div>
         ) : filtered.length === 0 ? (
           <div className="no-results" role="alert">
-            <p>No Pokémon found matching your search.</p>
+            {activeTab === 'favorites' ? (
+              <p>You haven't saved any favorites yet.<br />Click the ❤️ on a Pokémon card to add it.</p>
+            ) : (
+              <p>No Pokémon found matching your search.</p>
+            )}
           </div>
         ) : (
           <>
@@ -85,15 +116,13 @@ export default function Home() {
                   <PokemonCard pokemon={p} />
                 </div>
               ))}
-
-              {/* Inline skeleton rows while loading more */}
               {loadingMore &&
                 Array.from({ length: 10 }).map((_, i) => (
                   <SkeletonCard key={`more-${i}`} />
                 ))}
             </div>
 
-            {hasMore && !search && !activeType && (
+            {showLoadMore && (
               <div className="load-more-wrapper">
                 <button
                   className="load-more-btn"

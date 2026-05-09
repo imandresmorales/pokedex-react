@@ -47,13 +47,19 @@
   opacity: 0.6;
 }
 
-.card-number {
+.card-top-row {
   position: relative;
   z-index: 1;
-  align-self: flex-end;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  margin-bottom: 0.1rem;
+}
+
+.card-number {
   font-size: 0.85rem;
   font-weight: 800;
-  margin-bottom: 0.25rem;
 }
 
 .card-image-wrapper {
