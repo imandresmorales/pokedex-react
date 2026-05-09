@@ -1,0 +1,7 @@
+User-agent: *
+Allow: /
+
+# Disallow build artifacts
+Disallow: /assets/
+
+Sitemap: https://imandresmorales.github.io/pokedex-react/sitemap.xml
