@@ -1,21 +1,28 @@
-import { Link } from 'react-router-dom';
+import { usePageTransition } from '../../hooks/usePageTransition';
 import TypeBadge from '../TypeBadge/TypeBadge';
 import FavoriteButton from '../FavoriteButton/FavoriteButton';
 import { typeColors } from '../../utils/typeColors';
 import './PokemonCard.css';
 
 export default function PokemonCard({ pokemon, index = 0 }) {
+  const navigate = usePageTransition();
   const primaryType = pokemon.types[0];
   const typeColor = typeColors[primaryType]?.bg || '#777';
-  // Cap the delay at 400ms so cards far down the list don't wait too long
   const delay = Math.min(index * 40, 400);
 
+  const handleClick = (e) => {
+    e.preventDefault();
+    navigate(`/pokemon/${pokemon.id}`);
+  };
+
   return (
-    <Link
-      to={`/pokemon/${pokemon.id}`}
+    // Use an anchor so semantics/accessibility are preserved, but intercept click for VT
+    <a
+      href={`/pokemon/${pokemon.id}`}
       className="pokemon-card"
       id={`pokemon-card-${pokemon.id}`}
       style={{ '--card-delay': `${delay}ms` }}
+      onClick={handleClick}
     >
       <div
         className="card-bg-accent"
@@ -51,6 +58,6 @@ export default function PokemonCard({ pokemon, index = 0 }) {
           <TypeBadge key={type} type={type} />
         ))}
       </div>
-    </Link>
+    </a>
   );
 }

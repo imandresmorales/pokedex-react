@@ -1,5 +1,6 @@
 import { useParams, Link } from 'react-router-dom';
 import { usePokemonDetail } from '../hooks/usePokemonDetail';
+import { usePageTransition } from '../hooks/usePageTransition';
 import TypeBadge from '../components/TypeBadge/TypeBadge';
 import StatsChart from '../components/StatsChart/StatsChart';
 import { DetailSeo } from '../components/Seo/Seo';
@@ -33,6 +34,7 @@ export default function Detail() {
     );
   }
 
+  const navigateTo = usePageTransition();
   const primaryType = pokemon.types[0].type.name;
   const typeColor = typeColors[primaryType]?.bg || '#777';
   const prevId = pokemon.id > 1 ? pokemon.id - 1 : null;
@@ -51,14 +53,26 @@ export default function Detail() {
           </Link>
           <div className="detail-arrows">
             {prevId && (
-              <Link to={`/pokemon/${prevId}`} className="arrow-btn" id="prev-btn" aria-label="Previous Pokémon">
+              <button
+                className="arrow-btn"
+                id="prev-btn"
+                aria-label="Previous Pokémon"
+                onClick={() => navigateTo(`/pokemon/${prevId}`)}
+                type="button"
+              >
                 ‹
-              </Link>
+              </button>
             )}
             {nextId && (
-              <Link to={`/pokemon/${nextId}`} className="arrow-btn" id="next-btn" aria-label="Next Pokémon">
+              <button
+                className="arrow-btn"
+                id="next-btn"
+                aria-label="Next Pokémon"
+                onClick={() => navigateTo(`/pokemon/${nextId}`)}
+                type="button"
+              >
                 ›
-              </Link>
+              </button>
             )}
           </div>
         </div>
