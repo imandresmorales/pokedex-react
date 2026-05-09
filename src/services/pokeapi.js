@@ -95,3 +95,36 @@ export function getEnglishGenus(speciesData) {
   );
   return entry?.genus || '';
 }
+
+/**
+ * Recursively flatten the PokéAPI evolution chain into an ordered array.
+ * Each entry: { id, name, minLevel, trigger }
+ *
+ * @param {object} chain - The `chain` object from the evolution-chain endpoint
+ * @returns {{ id: number, name: string, minLevel: number|null, trigger: string|null }[]}
+ */
+export function parseEvolutionChain(chain) {
+  const stages = [];
+
+  function traverse(node, trigger = null, minLevel = null) {
+    const id = getIdFromUrl(node.species.url);
+    stages.push({
+      id,
+      name: node.species.name,
+      trigger,
+      minLevel,
+    });
+
+    for (const next of node.evolves_to) {
+      const detail = next.evolution_details?.[0] ?? {};
+      traverse(
+        next,
+        detail.trigger?.name ?? null,
+        detail.min_level ?? null
+      );
+    }
+  }
+
+  traverse(chain);
+  return stages;
+}

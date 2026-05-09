@@ -1,0 +1,115 @@
+.evo-chain {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  justify-content: center;
+}
+
+/* Each stage + arrow pair */
+.evo-chain-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+/* Arrow between stages */
+.evo-arrow {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.2rem;
+  color: var(--text-muted);
+  flex-shrink: 0;
+}
+
+.evo-arrow svg {
+  width: 22px;
+  height: 22px;
+}
+
+.evo-level,
+.evo-trigger {
+  font-size: 0.65rem;
+  font-weight: 700;
+  color: var(--text-muted);
+  text-transform: capitalize;
+  text-align: center;
+  max-width: 60px;
+  line-height: 1.2;
+}
+
+/* Individual stage button */
+.evo-stage {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.75rem;
+  border-radius: 1rem;
+  border: 2px solid var(--border-color);
+  background: var(--card-bg);
+  cursor: pointer;
+  transition: all 0.25s ease, background 0.3s ease;
+  font-family: inherit;
+  min-width: 90px;
+}
+
+.evo-stage:not(:disabled):hover {
+  border-color: var(--accent-primary);
+  transform: translateY(-4px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+}
+
+.evo-stage:focus-visible {
+  outline: 2px solid var(--accent-primary);
+  outline-offset: 3px;
+}
+
+/* Current Pokémon is highlighted but not clickable */
+.evo-stage--current {
+  border-color: var(--accent-primary);
+  background: linear-gradient(135deg, rgba(220,38,38,0.08), rgba(220,38,38,0.04));
+  cursor: default;
+}
+
+.evo-stage-img {
+  width: 72px;
+  height: 72px;
+  object-fit: contain;
+  filter: drop-shadow(0 2px 6px rgba(0,0,0,0.12));
+  transition: transform 0.3s ease;
+}
+
+.evo-stage:not(:disabled):hover .evo-stage-img {
+  transform: scale(1.1);
+}
+
+.evo-stage-name {
+  font-size: 0.8rem;
+  font-weight: 700;
+  text-transform: capitalize;
+  color: var(--text-primary);
+}
+
+/* No evolution text */
+.evo-no-chain {
+  color: var(--text-muted);
+  font-size: 0.9rem;
+  font-style: italic;
+}
+
+/* Mobile: stack vertically if needed */
+@media (max-width: 480px) {
+  .evo-chain {
+    flex-direction: column;
+  }
+
+  .evo-chain-item {
+    flex-direction: column;
+  }
+
+  .evo-arrow svg {
+    transform: rotate(90deg);
+  }
+}

@@ -1,8 +1,10 @@
 import { useParams, Link } from 'react-router-dom';
 import { usePokemonDetail } from '../hooks/usePokemonDetail';
 import { usePageTransition } from '../hooks/usePageTransition';
+import { useEvolutionChain } from '../hooks/useEvolutionChain';
 import TypeBadge from '../components/TypeBadge/TypeBadge';
 import StatsChart from '../components/StatsChart/StatsChart';
+import EvolutionChain from '../components/EvolutionChain/EvolutionChain';
 import { DetailSeo } from '../components/Seo/Seo';
 import { typeColors } from '../utils/typeColors';
 import './Detail.css';
@@ -10,6 +12,7 @@ import './Detail.css';
 export default function Detail() {
   const { id } = useParams();
   const { pokemon, species, loading, error } = usePokemonDetail(id);
+  const { chain } = useEvolutionChain(id);
 
   if (loading) {
     return (
@@ -149,6 +152,11 @@ export default function Detail() {
               {pokemon.stats.reduce((sum, s) => sum + s.base_stat, 0)}
             </span>
           </div>
+        </section>
+        {/* Evolution Chain */}
+        <section className="detail-section" id="evolution-section">
+          <h2 className="section-title">Evolution Chain</h2>
+          <EvolutionChain chain={chain} currentId={pokemon.id} />
         </section>
       </div>
     </main>
