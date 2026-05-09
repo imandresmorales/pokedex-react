@@ -4,12 +4,19 @@ import FavoriteButton from '../FavoriteButton/FavoriteButton';
 import { typeColors } from '../../utils/typeColors';
 import './PokemonCard.css';
 
-export default function PokemonCard({ pokemon }) {
+export default function PokemonCard({ pokemon, index = 0 }) {
   const primaryType = pokemon.types[0];
   const typeColor = typeColors[primaryType]?.bg || '#777';
+  // Cap the delay at 400ms so cards far down the list don't wait too long
+  const delay = Math.min(index * 40, 400);
 
   return (
-    <Link to={`/pokemon/${pokemon.id}`} className="pokemon-card" id={`pokemon-card-${pokemon.id}`}>
+    <Link
+      to={`/pokemon/${pokemon.id}`}
+      className="pokemon-card"
+      id={`pokemon-card-${pokemon.id}`}
+      style={{ '--card-delay': `${delay}ms` }}
+    >
       <div
         className="card-bg-accent"
         style={{ background: `linear-gradient(135deg, ${typeColor}20, ${typeColor}08)` }}

@@ -111,9 +111,9 @@ export default function Home() {
               role="list"
               aria-label={`${filtered.length} Pokémon${activeType ? ` of type ${activeType}` : ''}`}
             >
-              {filtered.map((p) => (
+              {filtered.map((p, i) => (
                 <div key={p.id} role="listitem">
-                  <PokemonCard pokemon={p} />
+                  <PokemonCard pokemon={p} index={i} />
                 </div>
               ))}
               {loadingMore &&
