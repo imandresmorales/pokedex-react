@@ -1,4 +1,5 @@
 import { usePageTransition } from '../../hooks/usePageTransition';
+import { use3DTilt } from '../../hooks/use3DTilt';
 import TypeBadge from '../TypeBadge/TypeBadge';
 import FavoriteButton from '../FavoriteButton/FavoriteButton';
 import { typeColors } from '../../utils/typeColors';
@@ -6,6 +7,8 @@ import './PokemonCard.css';
 
 export default function PokemonCard({ pokemon, index = 0 }) {
   const navigate = usePageTransition();
+  const { ref, handlers } = use3DTilt({ maxTilt: 10, scale: 1.04 });
+
   const primaryType = pokemon.types[0];
   const typeColor = typeColors[primaryType]?.bg || '#777';
   const delay = Math.min(index * 40, 400);
@@ -16,13 +19,14 @@ export default function PokemonCard({ pokemon, index = 0 }) {
   };
 
   return (
-    // Use an anchor so semantics/accessibility are preserved, but intercept click for VT
     <a
+      ref={ref}
       href={`/pokemon/${pokemon.id}`}
       className="pokemon-card"
       id={`pokemon-card-${pokemon.id}`}
       style={{ '--card-delay': `${delay}ms` }}
       onClick={handleClick}
+      {...handlers}
     >
       <div
         className="card-bg-accent"
