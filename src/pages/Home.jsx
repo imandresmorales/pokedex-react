@@ -77,13 +77,15 @@ export default function Home() {
           </button>
         </div>
 
-        <SearchBar
-          value={search}
-          onChange={setSearch}
-          onTypeFilter={setActiveType}
-          types={ALL_TYPES}
-          activeType={activeType}
-        />
+        <div className="search-sticky-wrapper">
+          <SearchBar
+            value={search}
+            onChange={setSearch}
+            onTypeFilter={setActiveType}
+            types={ALL_TYPES}
+            activeType={activeType}
+          />
+        </div>
 
         <p className="sr-only" role="status" aria-live="polite">
           {loading ? 'Loading Pokémon…' : `${filtered.length} Pokémon found`}
