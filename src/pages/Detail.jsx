@@ -1,4 +1,5 @@
-import { useParams, Link } from 'react-router-dom';
+import { useParams, Link, useLocation } from 'react-router-dom';
+import { useEffect, useRef } from 'react';
 import { usePokemonDetail } from '../hooks/usePokemonDetail';
 import { usePageTransition } from '../hooks/usePageTransition';
 import { useEvolutionChain } from '../hooks/useEvolutionChain';
@@ -14,6 +15,21 @@ export default function Detail() {
   const { id } = useParams();
   const { pokemon, species, loading, error } = usePokemonDetail(id);
   const { chain } = useEvolutionChain(id);
+  const headingRef = useRef(null);
+  const location = useLocation();
+
+  /**
+   * Move keyboard focus to the Pokémon name heading whenever the route changes.
+   * This ensures screen reader users hear the new page title immediately
+   * instead of staying on the previously focused element.
+   * tabIndex="-1" on the h1 allows programmatic focus without adding it
+   * to the natural tab order.
+   */
+  useEffect(() => {
+    if (headingRef.current) {
+      headingRef.current.focus({ preventScroll: false });
+    }
+  }, [location.pathname]);
 
   if (loading) {
     return (
@@ -86,7 +102,14 @@ export default function Detail() {
             <span className="detail-number" style={{ color: `${typeColor}` }}>
               #{String(pokemon.id).padStart(3, '0')}
             </span>
-            <h1 className="detail-name">{pokemon.name}</h1>
+            <h1
+              ref={headingRef}
+              className="detail-name"
+              tabIndex="-1"
+              id="pokemon-heading"
+            >
+              {pokemon.name}
+            </h1>
             {species?.genus && (
               <span className="detail-genus">{species.genus}</span>
             )}

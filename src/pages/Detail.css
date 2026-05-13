@@ -88,7 +88,15 @@
   font-weight: 900;
   text-transform: capitalize;
   margin: 0.25rem 0;
-  line-height: 1.1;
+  /* Remove visible outline from programmatic focus (screen-reader aid),
+     but keep it visible for real keyboard navigation */
+  outline: none;
+}
+
+.detail-name:focus-visible {
+  outline: 2px solid var(--accent-primary);
+  outline-offset: 4px;
+  border-radius: 0.25rem;
 }
 
 .detail-genus {
