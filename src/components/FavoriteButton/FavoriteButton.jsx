@@ -1,19 +1,29 @@
+import { useRef } from 'react';
 import { useFavorites } from '../../context/FavoritesContext';
+import { launchConfetti } from '../../utils/confetti';
 import './FavoriteButton.css';
 
 export default function FavoriteButton({ pokemon, className = '' }) {
   const { isFavorite, toggleFavorite } = useFavorites();
   const fav = isFavorite(pokemon.id);
+  const btnRef = useRef(null);
 
   const handleClick = (e) => {
     // Prevent navigating to detail page when card is a Link
     e.preventDefault();
     e.stopPropagation();
+
+    // Only launch confetti when *adding* to favorites (not removing)
+    if (!fav && btnRef.current) {
+      launchConfetti(btnRef.current);
+    }
+
     toggleFavorite(pokemon);
   };
 
   return (
     <button
+      ref={btnRef}
       className={`fav-btn ${fav ? 'fav-btn--active' : ''} ${className}`}
       onClick={handleClick}
       aria-label={fav ? `Remove ${pokemon.name} from favorites` : `Add ${pokemon.name} to favorites`}
