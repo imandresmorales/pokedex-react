@@ -55,6 +55,58 @@
   --accent-glow: rgba(220, 38, 38, 0.2);
 }
 
+/* ===== High Contrast Mode ===== */
+/* Applied via data-contrast="high" on <html>.
+   Uses pure black/white with no transparency to maximise legibility
+   for users with low vision. Meets WCAG AAA contrast ratio (≥ 7:1). */
+[data-contrast='high'] {
+  --bg-primary: #000000;
+  --bg-secondary: #111111;
+  --body-bg: #000000;
+  --card-bg: #0a0a0a;
+  --header-bg: #000000;
+  --border-color: #ffffff;
+  --hover-bg: #222222;
+
+  --text-primary: #ffffff;
+  --text-secondary: #eeeeee;
+  --text-muted: #cccccc;
+
+  --accent-primary: #ffff00; /* yellow on black — highest contrast accent */
+  --accent-glow: rgba(255, 255, 0, 0.3);
+}
+
+/* High contrast + light theme */
+[data-theme='light'][data-contrast='high'] {
+  --bg-primary: #ffffff;
+  --bg-secondary: #f0f0f0;
+  --body-bg: #ffffff;
+  --card-bg: #ffffff;
+  --header-bg: #ffffff;
+  --border-color: #000000;
+  --hover-bg: #e8e8e8;
+
+  --text-primary: #000000;
+  --text-secondary: #111111;
+  --text-muted: #333333;
+
+  --accent-primary: #0000cc; /* dark blue on white */
+  --accent-glow: rgba(0, 0, 204, 0.2);
+}
+
+/* In high contrast, remove all box-shadows and use solid borders instead */
+[data-contrast='high'] * {
+  box-shadow: none !important;
+  text-shadow: none !important;
+}
+
+[data-contrast='high'] .pokemon-card,
+[data-contrast='high'] .evo-stage,
+[data-contrast='high'] .type-badge {
+  border-width: 2px !important;
+  border-style: solid !important;
+}
+
 /* ===== Reset & Base ===== */
 *,
 *::before,
