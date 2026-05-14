@@ -337,3 +337,26 @@
     padding: 1rem 0.75rem;
   }
 }
+
+/* ===== Swipe hint — only visible on touch devices ===== */
+/* @media (hover: none) targets devices with no hover capability (touch screens) */
+@media (hover: none) and (pointer: coarse) {
+  .detail-page::after {
+    content: '← Swipe to navigate →';
+    display: block;
+    text-align: center;
+    font-size: 0.72rem;
+    color: var(--text-muted);
+    padding: 0.5rem 0 1rem;
+    opacity: 0.7;
+    letter-spacing: 0.02em;
+    pointer-events: none;
+    /* Fade out after a moment so it doesn't distract */
+    animation: swipeHintFade 4s ease 1.5s forwards;
+  }
+}
+
+@keyframes swipeHintFade {
+  0%   { opacity: 0.7; }
+  100% { opacity: 0; }
+}

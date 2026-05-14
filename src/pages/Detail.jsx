@@ -3,6 +3,7 @@ import { useEffect, useRef } from 'react';
 import { usePokemonDetail } from '../hooks/usePokemonDetail';
 import { usePageTransition } from '../hooks/usePageTransition';
 import { useEvolutionChain } from '../hooks/useEvolutionChain';
+import { useSwipeNavigation } from '../hooks/useSwipeNavigation';
 import TypeBadge from '../components/TypeBadge/TypeBadge';
 import StatsChart from '../components/StatsChart/StatsChart';
 import EvolutionChain from '../components/EvolutionChain/EvolutionChain';
@@ -60,8 +61,19 @@ export default function Detail() {
   const prevId = pokemon.id > 1 ? pokemon.id - 1 : null;
   const nextId = pokemon.id < 151 ? pokemon.id + 1 : null;
 
+  // Swipe left = next, swipe right = previous (mirrors natural reading direction)
+  const { handlers: swipeHandlers } = useSwipeNavigation({
+    onSwipeLeft:  nextId ? () => navigateTo(`/pokemon/${nextId}`) : undefined,
+    onSwipeRight: prevId ? () => navigateTo(`/pokemon/${prevId}`) : undefined,
+  });
+
   return (
-    <main className="detail-page" id="detail-page">
+    <main
+      className="detail-page"
+      id="detail-page"
+      {...swipeHandlers}
+      aria-label={`${pokemon.name} detail. Swipe left or right to navigate.`}
+    >
       <DetailSeo pokemon={pokemon} species={species} />
       <div className="detail-hero" style={{ background: `linear-gradient(180deg, ${typeColor}30, transparent)` }}>
         <div className="detail-nav">
