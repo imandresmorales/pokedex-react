@@ -6,15 +6,18 @@ import App from './App.jsx'
 import { ThemeProvider } from './context/ThemeContext.jsx'
 import { FavoritesProvider } from './context/FavoritesContext.jsx'
 import { ContrastProvider } from './context/ContrastContext.jsx'
+import { FontSizeProvider } from './context/FontSizeContext.jsx'
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
     <HelmetProvider>
       <ThemeProvider>
         <ContrastProvider>
-          <FavoritesProvider>
-            <App />
-          </FavoritesProvider>
+          <FontSizeProvider>
+            <FavoritesProvider>
+              <App />
+            </FavoritesProvider>
+          </FontSizeProvider>
         </ContrastProvider>
       </ThemeProvider>
     </HelmetProvider>

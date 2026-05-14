@@ -1,10 +1,12 @@
 import { Link } from 'react-router-dom';
 import ThemeToggle from '../ThemeToggle/ThemeToggle';
 import { useContrast } from '../../context/ContrastContext';
+import { useFontSize } from '../../context/FontSizeContext';
 import './Header.css';
 
 export default function Header() {
   const { isHighContrast, toggleContrast } = useContrast();
+  const { canIncrease, canDecrease, increase, decrease, reset, sizeIndex } = useFontSize();
 
   return (
     <header className="app-header" id="app-header">
@@ -24,6 +26,43 @@ export default function Header() {
         </Link>
 
         <div className="header-controls">
+          {/* Font size controls */}
+          <div className="font-size-controls" role="group" aria-label="Text size controls">
+            <button
+              className="font-btn"
+              onClick={decrease}
+              disabled={!canDecrease}
+              aria-label="Decrease text size"
+              title="Decrease text size"
+              type="button"
+              id="font-decrease-btn"
+            >
+              A<sup>−</sup>
+            </button>
+            <button
+              className="font-btn font-btn--reset"
+              onClick={reset}
+              aria-label="Reset text size to default"
+              title="Reset text size"
+              type="button"
+              id="font-reset-btn"
+              disabled={sizeIndex === 1}
+            >
+              A
+            </button>
+            <button
+              className="font-btn"
+              onClick={increase}
+              disabled={!canIncrease}
+              aria-label="Increase text size"
+              title="Increase text size"
+              type="button"
+              id="font-increase-btn"
+            >
+              A<sup>+</sup>
+            </button>
+          </div>
+
           {/* High contrast toggle */}
           <button
             className={`contrast-btn ${isHighContrast ? 'contrast-btn--active' : ''}`}
@@ -34,7 +73,6 @@ export default function Header() {
             type="button"
             id="contrast-toggle"
           >
-            {/* Eye / contrast icon */}
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
               <circle cx="12" cy="12" r="10" />
               <path d="M12 2a10 10 0 0 1 0 20V2z" fill="currentColor" />
