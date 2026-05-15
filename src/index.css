@@ -221,3 +221,24 @@ button {
     animation: none !important;
   }
 }
+
+/* ===== Pull-to-refresh Indicator ===== */
+.ptr-indicator {
+  position: fixed;
+  top: 0;
+  left: 50%;
+  width: 40px;
+  height: 40px;
+  background: var(--bg-primary);
+  border: 1px solid var(--border-color);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  color: var(--accent-primary);
+  pointer-events: none;
+  /* Hardware acceleration for smooth movement */
+  will-change: transform, opacity;
+}
