@@ -59,7 +59,7 @@ export default function Detail() {
   const primaryType = pokemon.types[0].type.name;
   const typeColor = typeColors[primaryType]?.bg || '#777';
   const prevId = pokemon.id > 1 ? pokemon.id - 1 : null;
-  const nextId = pokemon.id < 151 ? pokemon.id + 1 : null;
+  const nextId = pokemon.id < 1025 ? pokemon.id + 1 : null;
 
   // Swipe left = next, swipe right = previous (mirrors natural reading direction)
   const { handlers: swipeHandlers } = useSwipeNavigation({

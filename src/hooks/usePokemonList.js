@@ -2,9 +2,8 @@ import { useState, useEffect, useCallback } from 'react';
 import { fetchPokemonList, fetchPokemon, getIdFromUrl } from '../services/pokeapi';
 
 const POKEMON_PER_PAGE = 20;
-const MAX_POKEMON = 151; // Gen 1
 
-export function usePokemonList() {
+export function usePokemonList(generation) {
   const [pokemon, setPokemon] = useState([]);
   const [loading, setLoading] = useState(true);
   const [loadingMore, setLoadingMore] = useState(false);
@@ -12,19 +11,27 @@ export function usePokemonList() {
   const [offset, setOffset] = useState(0);
   const [hasMore, setHasMore] = useState(true);
 
+  // Reset list when generation changes
+  useEffect(() => {
+    setPokemon([]);
+    setOffset(0);
+    setHasMore(true);
+  }, [generation.id]);
+
   const loadPokemon = useCallback(async (currentOffset) => {
     try {
-      const remaining = MAX_POKEMON - currentOffset;
-      const limit = Math.min(POKEMON_PER_PAGE, remaining);
+      const remainingInGen = generation.limit - currentOffset;
+      const limit = Math.min(POKEMON_PER_PAGE, remainingInGen);
 
       if (limit <= 0) {
         setHasMore(false);
         return;
       }
 
-      const listData = await fetchPokemonList(limit, currentOffset);
+      // We add the generation's global offset to the local offset
+      const globalOffset = generation.offset + currentOffset;
+      const listData = await fetchPokemonList(limit, globalOffset);
       
-      // Fetch details for each Pokémon in parallel
       const details = await Promise.all(
         listData.results.map(async (p) => {
           const id = getIdFromUrl(p.url);
@@ -45,17 +52,19 @@ export function usePokemonList() {
         return [...prev, ...newPokemon];
       });
 
-      setHasMore(currentOffset + limit < MAX_POKEMON);
+      setHasMore(currentOffset + limit < generation.limit);
     } catch (err) {
       setError(err.message);
     }
-  }, []);
+  }, [generation]);
 
-  // Initial load
+  // Initial load for the generation
   useEffect(() => {
-    setLoading(true);
-    loadPokemon(0).finally(() => setLoading(false));
-  }, [loadPokemon]);
+    if (offset === 0 && pokemon.length === 0) {
+      setLoading(true);
+      loadPokemon(0).finally(() => setLoading(false));
+    }
+  }, [offset, pokemon.length, loadPokemon]);
 
   // Load more function
   const loadMore = useCallback(async () => {

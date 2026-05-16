@@ -5,6 +5,7 @@ import PokemonCard from '../components/PokemonCard/PokemonCard';
 import SkeletonCard from '../components/SkeletonCard/SkeletonCard';
 import SearchBar from '../components/SearchBar/SearchBar';
 import { HomeSeo } from '../components/Seo/Seo';
+import { GENERATIONS } from '../utils/generations';
 import './Home.css';
 
 const ALL_TYPES = [
@@ -16,7 +17,8 @@ const ALL_TYPES = [
 const SKELETON_COUNT = 20;
 
 export default function Home() {
-  const { pokemon, loading, loadingMore, hasMore, loadMore } = usePokemonList();
+  const [activeGenIndex, setActiveGenIndex] = useState(0);
+  const { pokemon, loading, loadingMore, hasMore, loadMore } = usePokemonList(GENERATIONS[activeGenIndex]);
   const { favorites } = useFavorites();
   const [search, setSearch] = useState('');
   const [activeType, setActiveType] = useState(null);
@@ -76,6 +78,23 @@ export default function Home() {
             )}
           </button>
         </div>
+
+        {activeTab === 'all' && (
+          <div className="generation-selector-wrapper">
+            <label htmlFor="gen-select" className="sr-only">Select Generation</label>
+            <select 
+              id="gen-select" 
+              className="gen-select"
+              value={activeGenIndex}
+              onChange={(e) => setActiveGenIndex(Number(e.target.value))}
+              aria-label="Filter by Generation"
+            >
+              {GENERATIONS.map((gen, idx) => (
+                <option key={gen.id} value={idx}>{gen.name}</option>
+              ))}
+            </select>
+          </div>
+        )}
 
         <div className="search-sticky-wrapper">
           <SearchBar
