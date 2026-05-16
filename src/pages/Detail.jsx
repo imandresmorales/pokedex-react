@@ -10,6 +10,7 @@ import EvolutionChain from '../components/EvolutionChain/EvolutionChain';
 import CryButton from '../components/CryButton/CryButton';
 import { DetailSeo } from '../components/Seo/Seo';
 import { typeColors } from '../utils/typeColors';
+import { formatMeasurement, formatNumber } from '../utils/formatters';
 import './Detail.css';
 
 export default function Detail() {
@@ -150,17 +151,17 @@ export default function Detail() {
           <p className="detail-description">{species?.description}</p>
           <div className="detail-physical">
             <div className="physical-item">
-              <span className="physical-value">{(pokemon.height / 10).toFixed(1)} m</span>
+              <span className="physical-value">{formatMeasurement(pokemon.height, 'meter')}</span>
               <span className="physical-label">Height</span>
             </div>
             <div className="physical-divider"></div>
             <div className="physical-item">
-              <span className="physical-value">{(pokemon.weight / 10).toFixed(1)} kg</span>
+              <span className="physical-value">{formatMeasurement(pokemon.weight, 'kilogram')}</span>
               <span className="physical-label">Weight</span>
             </div>
             <div className="physical-divider"></div>
             <div className="physical-item">
-              <span className="physical-value">{pokemon.base_experience}</span>
+              <span className="physical-value">{formatNumber(pokemon.base_experience)}</span>
               <span className="physical-label">Base Exp</span>
             </div>
           </div>

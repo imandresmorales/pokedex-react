@@ -1,4 +1,5 @@
 import { Helmet } from 'react-helmet-async';
+import { formatMeasurement, formatNumber } from '../../utils/formatters';
 
 const SITE_NAME = 'Pokédex React';
 const BASE_URL = 'https://imandresmorales.github.io/pokedex-react';
@@ -88,17 +89,17 @@ export function DetailSeo({ pokemon, species }) {
       {
         '@type': 'PropertyValue',
         name: 'Height',
-        value: `${(pokemon.height / 10).toFixed(1)} m`,
+        value: formatMeasurement(pokemon.height, 'meter'),
       },
       {
         '@type': 'PropertyValue',
         name: 'Weight',
-        value: `${(pokemon.weight / 10).toFixed(1)} kg`,
+        value: formatMeasurement(pokemon.weight, 'kilogram'),
       },
       {
         '@type': 'PropertyValue',
         name: 'Base Experience',
-        value: String(pokemon.base_experience),
+        value: formatNumber(pokemon.base_experience),
       },
     ],
   };
