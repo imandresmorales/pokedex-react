@@ -1,8 +1,17 @@
 import { useState } from 'react';
+import { useLanguage } from '../../context/LanguageContext';
+import { typeTranslationsES } from '../../utils/typeColors';
 import './SearchBar.css';
 
 export default function SearchBar({ value, onChange, onTypeFilter, types, activeType }) {
   const [filtersOpen, setFiltersOpen] = useState(false);
+  const { language } = useLanguage();
+  
+  const getTypeName = (typeStr) => {
+    return language === 'es' && typeTranslationsES[typeStr]
+      ? typeTranslationsES[typeStr]
+      : typeStr;
+  };
 
   return (
     <div className="search-bar" id="search-bar">
@@ -24,12 +33,12 @@ export default function SearchBar({ value, onChange, onTypeFilter, types, active
         <input
           id="search-input"
           type="search"
-          placeholder="Search Pokémon by name or number..."
+          placeholder={language === 'es' ? 'Buscar Pokémon por nombre o número...' : 'Search Pokémon by name or number...'}
           value={value}
           onChange={(e) => onChange(e.target.value)}
           className="search-input"
           autoComplete="off"
-          aria-label="Search Pokémon by name or number"
+          aria-label={language === 'es' ? 'Buscar Pokémon' : 'Search Pokémon'}
         />
         {value && (
           <button
@@ -56,7 +65,9 @@ export default function SearchBar({ value, onChange, onTypeFilter, types, active
           <line x1="8" y1="12" x2="16" y2="12" />
           <line x1="11" y1="18" x2="13" y2="18" />
         </svg>
-        {activeType ? `Filter: ${activeType}` : 'Filter by type'}
+        {activeType 
+          ? (language === 'es' ? `Filtro: ${getTypeName(activeType)}` : `Filter: ${getTypeName(activeType)}`) 
+          : (language === 'es' ? 'Filtrar por tipo' : 'Filter by type')}
         {activeType && (
           <span
             className="filters-clear-dot"
@@ -77,7 +88,7 @@ export default function SearchBar({ value, onChange, onTypeFilter, types, active
           type="button"
           aria-pressed={!activeType}
         >
-          All
+          {language === 'es' ? 'Todos' : 'All'}
         </button>
         {types.map((type) => (
           <button
@@ -91,7 +102,7 @@ export default function SearchBar({ value, onChange, onTypeFilter, types, active
             type="button"
             aria-pressed={activeType === type}
           >
-            {type}
+            {getTypeName(type)}
           </button>
         ))}
       </div>

@@ -2,11 +2,13 @@ import { Link } from 'react-router-dom';
 import ThemeToggle from '../ThemeToggle/ThemeToggle';
 import { useContrast } from '../../context/ContrastContext';
 import { useFontSize } from '../../context/FontSizeContext';
+import { useLanguage } from '../../context/LanguageContext';
 import './Header.css';
 
 export default function Header() {
   const { isHighContrast, toggleContrast } = useContrast();
   const { canIncrease, canDecrease, increase, decrease, reset, sizeIndex } = useFontSize();
+  const { language, toggleLanguage } = useLanguage();
 
   return (
     <header className="app-header" id="app-header">
@@ -77,6 +79,18 @@ export default function Header() {
               <circle cx="12" cy="12" r="10" />
               <path d="M12 2a10 10 0 0 1 0 20V2z" fill="currentColor" />
             </svg>
+          </button>
+
+          {/* Language toggle */}
+          <button
+            className="lang-btn"
+            onClick={toggleLanguage}
+            aria-label={`Switch to ${language === 'en' ? 'Spanish' : 'English'}`}
+            title={`Language: ${language === 'en' ? 'English' : 'Español'}`}
+            type="button"
+            id="lang-toggle"
+          >
+            {language === 'en' ? 'ES' : 'EN'}
           </button>
 
           <ThemeToggle />

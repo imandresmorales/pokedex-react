@@ -7,6 +7,7 @@ import { ThemeProvider } from './context/ThemeContext.jsx'
 import { FavoritesProvider } from './context/FavoritesContext.jsx'
 import { ContrastProvider } from './context/ContrastContext.jsx'
 import { FontSizeProvider } from './context/FontSizeContext.jsx'
+import { LanguageProvider } from './context/LanguageContext.jsx'
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
@@ -14,9 +15,11 @@ createRoot(document.getElementById('root')).render(
       <ThemeProvider>
         <ContrastProvider>
           <FontSizeProvider>
-            <FavoritesProvider>
-              <App />
-            </FavoritesProvider>
+            <LanguageProvider>
+              <FavoritesProvider>
+                <App />
+              </FavoritesProvider>
+            </LanguageProvider>
           </FontSizeProvider>
         </ContrastProvider>
       </ThemeProvider>
