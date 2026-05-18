@@ -77,22 +77,28 @@ export function getIdFromUrl(url) {
 }
 
 /**
- * Get English flavor text from species data
+ * Get localized flavor text from species data
  */
-export function getEnglishFlavorText(speciesData) {
+export function getLocalizedFlavorText(speciesData, lang = 'en') {
   const entry = speciesData.flavor_text_entries?.find(
-    (e) => e.language.name === 'en'
+    (e) => e.language.name === lang
   );
+  // Fallback to english if not found
+  if (!entry && lang !== 'en') return getLocalizedFlavorText(speciesData, 'en');
+  
   return entry?.flavor_text?.replace(/\f|\n/g, ' ') || 'No description available.';
 }
 
 /**
- * Get English genus from species data
+ * Get localized genus from species data
  */
-export function getEnglishGenus(speciesData) {
+export function getLocalizedGenus(speciesData, lang = 'en') {
   const entry = speciesData.genera?.find(
-    (e) => e.language.name === 'en'
+    (e) => e.language.name === lang
   );
+  // Fallback to english if not found
+  if (!entry && lang !== 'en') return getLocalizedGenus(speciesData, 'en');
+  
   return entry?.genus || '';
 }
 

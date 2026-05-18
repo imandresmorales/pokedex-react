@@ -1,11 +1,13 @@
 import { useState, useEffect } from 'react';
-import { fetchPokemon, fetchPokemonSpecies, getEnglishFlavorText, getEnglishGenus } from '../services/pokeapi';
+import { fetchPokemon, fetchPokemonSpecies, getLocalizedFlavorText, getLocalizedGenus } from '../services/pokeapi';
+import { useLanguage } from '../context/LanguageContext';
 
 export function usePokemonDetail(id) {
   const [pokemon, setPokemon] = useState(null);
   const [species, setSpecies] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const { language } = useLanguage();
 
   useEffect(() => {
     if (!id) return;
@@ -21,8 +23,8 @@ export function usePokemonDetail(id) {
         setPokemon(pokemonData);
         setSpecies({
           ...speciesData,
-          description: getEnglishFlavorText(speciesData),
-          genus: getEnglishGenus(speciesData),
+          description: getLocalizedFlavorText(speciesData, language),
+          genus: getLocalizedGenus(speciesData, language),
         });
       })
       .catch((err) => {
@@ -31,7 +33,7 @@ export function usePokemonDetail(id) {
       .finally(() => {
         setLoading(false);
       });
-  }, [id]);
+  }, [id, language]);
 
   return { pokemon, species, loading, error };
 }
