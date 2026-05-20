@@ -28,6 +28,9 @@ export default function Header() {
         </Link>
 
         <div className="header-controls">
+          <Link to="/quiz" className="header-nav-link" title="Play Who's That Pokémon?">
+            🎮 Quiz
+          </Link>
           {/* Font size controls */}
           <div className="font-size-controls" role="group" aria-label="Text size controls">
             <button
