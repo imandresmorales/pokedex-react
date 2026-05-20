@@ -28,6 +28,9 @@ export default function Header() {
         </Link>
 
         <div className="header-controls">
+          <Link to="/compare" className="header-nav-link" title="Compare Pokémon Stats">
+            📊 Compare
+          </Link>
           <Link to="/quiz" className="header-nav-link" title="Play Who's That Pokémon?">
             🎮 Quiz
           </Link>

@@ -5,6 +5,7 @@ import Home from './pages/Home';
 import Detail from './pages/Detail';
 import NotFound from './pages/NotFound';
 import Quiz from './pages/Quiz';
+import Compare from './pages/Compare';
 import { usePullToRefresh } from './hooks/usePullToRefresh';
 
 function App() {
@@ -42,6 +43,7 @@ function App() {
         <Route path="/" element={<Home />} />
         <Route path="/pokemon/:id" element={<Detail />} />
         <Route path="/quiz" element={<Quiz />} />
+        <Route path="/compare" element={<Compare />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
     </BrowserRouter>
