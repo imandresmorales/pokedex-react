@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { fetchPokemon, fetchPokemonSpecies, getLocalizedFlavorText, getLocalizedGenus } from '../services/pokeapi';
+import { fetchPokemon, fetchPokemonSpecies, getLocalizedFlavorText, getLocalizedGenus, getLocalizedName } from '../services/pokeapi';
 import { useLanguage } from '../context/LanguageContext';
 
 export function usePokemonDetail(id) {
@@ -12,6 +12,8 @@ export function usePokemonDetail(id) {
   useEffect(() => {
     if (!id) return;
 
+    // Reset loading/error state before fetching — React batches these setState calls.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setLoading(true);
     setError(null);
 
@@ -25,6 +27,8 @@ export function usePokemonDetail(id) {
           ...speciesData,
           description: getLocalizedFlavorText(speciesData, language),
           genus: getLocalizedGenus(speciesData, language),
+          // Localized name from the species `names` array (e.g. 'Bulbasaur' → 'Bulbasaur' in ES)
+          localizedName: getLocalizedName(speciesData, language),
         });
       })
       .catch((err) => {

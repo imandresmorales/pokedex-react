@@ -58,6 +58,7 @@ export function FontSizeProvider({ children }) {
   );
 }
 
+// eslint-disable-next-line react-refresh/only-export-components
 export function useFontSize() {
   return useContext(FontSizeContext);
 }

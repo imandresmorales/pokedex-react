@@ -51,12 +51,15 @@ export default function PokemonCard({ pokemon, index = 0 }) {
       <div className="card-image-wrapper">
         <img
           src={pokemon.sprite}
-          alt={`${pokemon.name} — ${pokemon.types.join(' / ')} type Pokémon`}
+          alt={`${pokemon.localizedName || pokemon.name} — ${pokemon.types.join(' / ')} type Pokémon`}
           className="card-image"
           loading="lazy"
         />
       </div>
-      <h3 className="card-name">{pokemon.name}</h3>
+      <h3 className="card-name">
+        {/* Show localized name when available, fall back to romanized name */}
+        {pokemon.localizedName || pokemon.name}
+      </h3>
       <div className="card-types">
         {pokemon.types.map((type) => (
           <TypeBadge key={type} type={type} />

@@ -51,7 +51,7 @@ export function usePokemonCry(pokemonId) {
 
     setIsPlaying(true);
     audio.play().catch(() => setIsPlaying(false));
-  }, [pokemonId, isPlaying, isSupported, modernUrl, legacyUrl]);
+  }, [isPlaying, isSupported, modernUrl, legacyUrl]);
 
   return { play, isPlaying, isSupported };
 }

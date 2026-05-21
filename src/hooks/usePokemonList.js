@@ -1,5 +1,6 @@
-import { useState, useEffect, useCallback } from 'react';
-import { fetchPokemonList, fetchPokemon, getIdFromUrl } from '../services/pokeapi';
+import { useState, useEffect, useCallback, useRef } from 'react';
+import { fetchPokemonList, fetchPokemon, fetchPokemonSpecies, getIdFromUrl, getLocalizedName } from '../services/pokeapi';
+import { useLanguage } from '../context/LanguageContext';
 
 const POKEMON_PER_PAGE = 20;
 
@@ -10,13 +11,33 @@ export function usePokemonList(generation) {
   const [error, setError] = useState(null);
   const [offset, setOffset] = useState(0);
   const [hasMore, setHasMore] = useState(true);
+  const { language } = useLanguage();
 
-  // Reset list when generation changes
+  // Store raw species data keyed by id so we can re-localise without re-fetching.
+  // useRef avoids triggering re-renders when we write to it.
+  const speciesCacheRef = useRef({});
+
+  // Reset list when generation changes — setState calls are batched by React.
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setPokemon([]);
     setOffset(0);
     setHasMore(true);
   }, [generation.id]);
+
+  /**
+   * Re-compute localizedName for every cached Pokémon whenever the language
+   * changes. This is a pure in-memory operation — no network requests.
+   */
+  useEffect(() => {
+    setPokemon((prev) =>
+      prev.map((p) => {
+        const speciesData = speciesCacheRef.current[p.id];
+        if (!speciesData) return p;
+        return { ...p, localizedName: getLocalizedName(speciesData, language) };
+      })
+    );
+  }, [language]);
 
   const loadPokemon = useCallback(async (currentOffset) => {
     try {
@@ -31,14 +52,26 @@ export function usePokemonList(generation) {
       // We add the generation's global offset to the local offset
       const globalOffset = generation.offset + currentOffset;
       const listData = await fetchPokemonList(limit, globalOffset);
-      
+
       const details = await Promise.all(
         listData.results.map(async (p) => {
           const id = getIdFromUrl(p.url);
-          const data = await fetchPokemon(id);
+
+          // Fetch pokemon data and species data in parallel for efficiency.
+          // Both calls are wrapped by the in-memory cache in pokeapi.js, so
+          // subsequent calls for the same id are instantaneous.
+          const [data, speciesData] = await Promise.all([
+            fetchPokemon(id),
+            fetchPokemonSpecies(id),
+          ]);
+
+          // Store species data for later language re-mapping (no re-fetch needed)
+          speciesCacheRef.current[id] = speciesData;
+
           return {
             id: data.id,
             name: data.name,
+            localizedName: getLocalizedName(speciesData, language),
             types: data.types.map((t) => t.type.name),
             sprite: data.sprites.other['official-artwork'].front_default,
             stats: data.stats,
@@ -56,11 +89,15 @@ export function usePokemonList(generation) {
     } catch (err) {
       setError(err.message);
     }
+  // language is intentionally excluded: language changes are handled by the
+  // separate useEffect above to avoid re-fetching the full list.
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [generation]);
 
   // Initial load for the generation
   useEffect(() => {
     if (offset === 0 && pokemon.length === 0) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setLoading(true);
       loadPokemon(0).finally(() => setLoading(false));
     }

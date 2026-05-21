@@ -19,6 +19,8 @@ export default function Detail() {
   const { chain } = useEvolutionChain(id);
   const headingRef = useRef(null);
   const location = useLocation();
+  // Hooks must always be called unconditionally — before any early return.
+  const navigateTo = usePageTransition();
 
   /**
    * Move keyboard focus to the Pokémon name heading whenever the route changes.
@@ -32,6 +34,19 @@ export default function Detail() {
       headingRef.current.focus({ preventScroll: false });
     }
   }, [location.pathname]);
+
+  // Compute nav targets (null when at boundary) — safe to derive here since
+  // pokemon may be null before data loads, so we guard with optional chaining.
+  const prevId = pokemon && pokemon.id > 1 ? pokemon.id - 1 : null;
+  const nextId = pokemon && pokemon.id < 1025 ? pokemon.id + 1 : null;
+
+  // Swipe left = next, swipe right = previous (mirrors natural reading direction).
+  // useSwipeNavigation must be called unconditionally; undefined callbacks are
+  // treated as no-ops inside the hook.
+  const { handlers: swipeHandlers } = useSwipeNavigation({
+    onSwipeLeft:  nextId ? () => navigateTo(`/pokemon/${nextId}`) : undefined,
+    onSwipeRight: prevId ? () => navigateTo(`/pokemon/${prevId}`) : undefined,
+  });
 
   if (loading) {
     return (
@@ -56,17 +71,8 @@ export default function Detail() {
     );
   }
 
-  const navigateTo = usePageTransition();
   const primaryType = pokemon.types[0].type.name;
   const typeColor = typeColors[primaryType]?.bg || '#777';
-  const prevId = pokemon.id > 1 ? pokemon.id - 1 : null;
-  const nextId = pokemon.id < 1025 ? pokemon.id + 1 : null;
-
-  // Swipe left = next, swipe right = previous (mirrors natural reading direction)
-  const { handlers: swipeHandlers } = useSwipeNavigation({
-    onSwipeLeft:  nextId ? () => navigateTo(`/pokemon/${nextId}`) : undefined,
-    onSwipeRight: prevId ? () => navigateTo(`/pokemon/${prevId}`) : undefined,
-  });
 
   return (
     <main
@@ -121,7 +127,9 @@ export default function Detail() {
               tabIndex="-1"
               id="pokemon-heading"
             >
-              {pokemon.name}
+              {/* Use the localized name from species data when available.
+                  Falls back to the English romanized name from the pokemon endpoint. */}
+              {species?.localizedName || pokemon.name}
             </h1>
             {species?.genus && (
               <span className="detail-genus">{species.genus}</span>

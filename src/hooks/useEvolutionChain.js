@@ -18,6 +18,8 @@ export function useEvolutionChain(pokemonId) {
     if (!pokemonId) return;
     let cancelled = false;
 
+    // Reset loading/error state before fetching — React batches these setState calls.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setLoading(true);
     setError(null);
 

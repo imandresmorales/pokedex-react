@@ -103,6 +103,24 @@ export function getLocalizedGenus(speciesData, lang = 'en') {
 }
 
 /**
+ * Get the localized name of a Pokémon from its species data.
+ * The species endpoint contains a `names` array with entries per language.
+ *
+ * @param {object} speciesData - Data from /pokemon-species/{id}
+ * @param {string} lang - BCP-47-like code used by PokéAPI (e.g. 'en', 'es')
+ * @returns {string} Localized name or empty string if not found
+ */
+export function getLocalizedName(speciesData, lang = 'en') {
+  const entry = speciesData.names?.find(
+    (e) => e.language.name === lang
+  );
+  // Fallback to english if not found for the requested language
+  if (!entry && lang !== 'en') return getLocalizedName(speciesData, 'en');
+
+  return entry?.name || '';
+}
+
+/**
  * Recursively flatten the PokéAPI evolution chain into an ordered array.
  * Each entry: { id, name, minLevel, trigger }
  *
