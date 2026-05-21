@@ -4,6 +4,7 @@ import Header from './components/Header/Header';
 import Home from './pages/Home';
 import Detail from './pages/Detail';
 import Compare from './pages/Compare';
+import Quiz from './pages/Quiz';
 import NotFound from './pages/NotFound';
 import CompareBar from './components/CompareBar/CompareBar';
 import { usePullToRefresh } from './hooks/usePullToRefresh';
@@ -43,6 +44,7 @@ function App() {
         <Route path="/" element={<Home />} />
         <Route path="/pokemon/:id" element={<Detail />} />
         <Route path="/compare" element={<Compare />} />
+        <Route path="/quiz" element={<Quiz />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
       {/* Global comparison tray — visible on all routes */}
