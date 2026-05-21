@@ -255,3 +255,23 @@
   outline: 2px solid var(--accent-primary);
   outline-offset: 2px;
 }
+
+/* Nav Link */
+.header-nav-link {
+  text-decoration: none;
+  font-weight: bold;
+  color: var(--text-primary);
+  padding: 0.5rem 0.8rem;
+  border-radius: 20px;
+  background: var(--hover-bg);
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  white-space: nowrap;
+}
+
+.header-nav-link:hover {
+  background: var(--accent-primary);
+  color: white;
+  transform: translateY(-2px);
+}
