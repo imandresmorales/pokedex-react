@@ -2,6 +2,7 @@ import { usePageTransition } from '../../hooks/usePageTransition';
 import { use3DTilt } from '../../hooks/use3DTilt';
 import TypeBadge from '../TypeBadge/TypeBadge';
 import FavoriteButton from '../FavoriteButton/FavoriteButton';
+import CompareButton from '../CompareButton/CompareButton';
 import { typeColors } from '../../utils/typeColors';
 import './PokemonCard.css';
 
@@ -40,12 +41,15 @@ export default function PokemonCard({ pokemon, index = 0 }) {
         </svg>
       </div>
 
-      {/* Top row: number + favorite */}
+      {/* Top row: number + action buttons */}
       <div className="card-top-row">
         <span className="card-number" style={{ color: `${typeColor}99` }}>
           #{String(pokemon.id).padStart(3, '0')}
         </span>
-        <FavoriteButton pokemon={pokemon} />
+        <div className="card-actions">
+          <CompareButton pokemon={pokemon} />
+          <FavoriteButton pokemon={pokemon} />
+        </div>
       </div>
 
       <div className="card-image-wrapper">

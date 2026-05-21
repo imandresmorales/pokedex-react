@@ -105,6 +105,13 @@
   font-weight: 800;
 }
 
+/* Groups the action buttons (compare + favorite) */
+.card-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+}
+
 .card-image-wrapper {
   position: relative;
   z-index: 1;

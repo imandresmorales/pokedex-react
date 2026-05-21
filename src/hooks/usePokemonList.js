@@ -75,6 +75,10 @@ export function usePokemonList(generation) {
             types: data.types.map((t) => t.type.name),
             sprite: data.sprites.other['official-artwork'].front_default,
             stats: data.stats,
+            // Physical data for the comparator page
+            height: data.height,
+            weight: data.weight,
+            base_experience: data.base_experience,
           };
         })
       );

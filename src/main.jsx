@@ -8,6 +8,7 @@ import { FavoritesProvider } from './context/FavoritesContext.jsx'
 import { ContrastProvider } from './context/ContrastContext.jsx'
 import { FontSizeProvider } from './context/FontSizeContext.jsx'
 import { LanguageProvider } from './context/LanguageContext.jsx'
+import { CompareProvider } from './context/CompareContext.jsx'
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
@@ -17,7 +18,9 @@ createRoot(document.getElementById('root')).render(
           <FontSizeProvider>
             <LanguageProvider>
               <FavoritesProvider>
-                <App />
+                <CompareProvider>
+                  <App />
+                </CompareProvider>
               </FavoritesProvider>
             </LanguageProvider>
           </FontSizeProvider>

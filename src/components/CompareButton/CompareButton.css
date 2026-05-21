@@ -1,0 +1,38 @@
+.compare-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 8px;
+  border: 1.5px solid var(--border-color);
+  background: var(--bg-secondary);
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: color 0.2s ease, border-color 0.2s ease, background 0.2s ease, transform 0.15s ease;
+  flex-shrink: 0;
+}
+
+.compare-btn:hover:not(:disabled) {
+  color: #6366f1;
+  border-color: #6366f1;
+  background: rgba(99, 102, 241, 0.1);
+  transform: scale(1.1);
+}
+
+.compare-btn--active {
+  color: #6366f1;
+  border-color: #6366f1;
+  background: rgba(99, 102, 241, 0.15);
+}
+
+.compare-btn--active:hover:not(:disabled) {
+  background: rgba(99, 102, 241, 0.25);
+}
+
+.compare-btn--disabled,
+.compare-btn:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+  transform: none;
+}
