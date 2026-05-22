@@ -7,6 +7,7 @@ import Compare from './pages/Compare';
 import Quiz from './pages/Quiz';
 import NotFound from './pages/NotFound';
 import CompareBar from './components/CompareBar/CompareBar';
+import ScrollToTop from './components/ScrollToTop/ScrollToTop';
 import { usePullToRefresh } from './hooks/usePullToRefresh';
 
 function App() {
@@ -47,8 +48,9 @@ function App() {
         <Route path="/quiz" element={<Quiz />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
-      {/* Global comparison tray — visible on all routes */}
+      {/* Global components — visible on all routes */}
       <CompareBar />
+      <ScrollToTop />
     </BrowserRouter>
   );
 }
