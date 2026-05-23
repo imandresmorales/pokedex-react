@@ -3,12 +3,14 @@ import ThemeToggle from '../ThemeToggle/ThemeToggle';
 import { useContrast } from '../../context/ContrastContext';
 import { useFontSize } from '../../context/FontSizeContext';
 import { useLanguage } from '../../context/LanguageContext';
+import { useTeam } from '../../context/TeamContext';
 import './Header.css';
 
 export default function Header() {
   const { isHighContrast, toggleContrast } = useContrast();
   const { canIncrease, canDecrease, increase, decrease, reset, sizeIndex } = useFontSize();
   const { language, toggleLanguage } = useLanguage();
+  const { team } = useTeam();
 
   return (
     <header className="app-header" id="app-header">
@@ -38,11 +40,14 @@ export default function Header() {
         </Link>
 
         <div className="header-controls">
+          <Link to="/team" className="header-nav-link" title={language === 'en' ? 'Build your team' : 'Arma tu equipo'} id="team-nav-link">
+            🛡️ {language === 'en' ? 'Team' : 'Equipo'}{team.length > 0 ? ` (${team.length})` : ''}
+          </Link>
           <Link to="/compare" className="header-nav-link" title="Compare Pokémon Stats">
-            📊 Compare
+            📊 {language === 'en' ? 'Compare' : 'Comparar'}
           </Link>
           <Link to="/quiz" className="header-nav-link" title="Play Who's That Pokémon?">
-            🎮 Quiz
+            🎮 {language === 'en' ? 'Quiz' : 'Juego'}
           </Link>
           {/* Font size controls */}
           <div className="font-size-controls" role="group" aria-label="Text size controls">

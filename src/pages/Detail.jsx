@@ -5,6 +5,7 @@ import { usePageTransition } from '../hooks/usePageTransition';
 import { useEvolutionChain } from '../hooks/useEvolutionChain';
 import { useSwipeNavigation } from '../hooks/useSwipeNavigation';
 import { useLanguage } from '../context/LanguageContext';
+import { useTeam } from '../context/TeamContext';
 import TypeBadge from '../components/TypeBadge/TypeBadge';
 import StatsChart from '../components/StatsChart/StatsChart';
 import EvolutionChain from '../components/EvolutionChain/EvolutionChain';
@@ -32,6 +33,9 @@ const TRANSLATIONS = {
     weight: 'Weight',
     baseExp: 'Base Exp',
     hidden: 'Hidden',
+    addToTeam: 'Add to Team',
+    removeFromTeam: 'Remove from Team',
+    teamFull: 'Your team is full! (Max 6)',
   },
   es: {
     about: 'Acerca de',
@@ -49,6 +53,9 @@ const TRANSLATIONS = {
     weight: 'Peso',
     baseExp: 'Exp. Base',
     hidden: 'Oculta',
+    addToTeam: 'Añadir al Equipo',
+    removeFromTeam: 'Quitar del Equipo',
+    teamFull: '¡Tu equipo está lleno! (Máximo 6)',
   }
 };
 
@@ -57,11 +64,13 @@ export default function Detail() {
   const { pokemon, species, loading, error } = usePokemonDetail(id);
   const { chain } = useEvolutionChain(id);
   const { language } = useLanguage();
+  const { addToTeam, removeFromTeam, isInTeam } = useTeam();
   const headingRef = useRef(null);
   const location = useLocation();
   const navigateTo = usePageTransition();
 
   const t = TRANSLATIONS[language] || TRANSLATIONS.en;
+  const inTeam = pokemon ? isInTeam(pokemon.id) : false;
 
   /**
    * Move keyboard focus to the Pokémon name heading whenever the route changes.
@@ -176,7 +185,27 @@ export default function Detail() {
             {species?.genus && (
               <span className="detail-genus">{species.genus}</span>
             )}
-            <CryButton pokemonId={pokemon.id} pokemonName={pokemon.name} />
+            <div className="detail-actions-row">
+              <CryButton pokemonId={pokemon.id} pokemonName={pokemon.name} />
+              <button
+                className={`detail-team-btn ${inTeam ? 'detail-team-btn--active' : ''}`}
+                onClick={() => {
+                  if (inTeam) {
+                    removeFromTeam(pokemon.id);
+                  } else {
+                    const res = addToTeam(pokemon);
+                    if (res && !res.success) {
+                      if (res.error === 'full') {
+                        alert(t.teamFull);
+                      }
+                    }
+                  }
+                }}
+                type="button"
+              >
+                {inTeam ? t.removeFromTeam : t.addToTeam}
+              </button>
+            </div>
             <div className="detail-types">
               {pokemon.types.map((t) => (
                 <TypeBadge key={t.type.name} type={t.type.name} />

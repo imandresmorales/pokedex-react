@@ -1,0 +1,443 @@
+.team-page {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 1.5rem 1.5rem 3rem;
+  animation: fadeIn 0.4s ease;
+}
+
+.team-header-section {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.team-title {
+  font-size: 2.2rem;
+  font-weight: 900;
+  color: var(--text-primary);
+  margin-bottom: 0.5rem;
+}
+
+.team-subtitle {
+  font-size: 1rem;
+  color: var(--text-secondary);
+  margin-bottom: 1.25rem;
+}
+
+.team-back-link {
+  display: inline-block;
+  color: var(--accent-primary);
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 0.9rem;
+  transition: opacity 0.2s;
+}
+
+.team-back-link:hover {
+  opacity: 0.8;
+  text-decoration: underline;
+}
+
+/* Empty State */
+.team-empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 4rem 2rem;
+  background: var(--card-bg);
+  border: 2px dashed var(--border-color);
+  border-radius: 1.5rem;
+  text-align: center;
+  gap: 1.25rem;
+  max-width: 500px;
+  margin: 2rem auto;
+}
+
+.pokeball-placeholder {
+  width: 90px;
+  height: 90px;
+  color: var(--text-muted);
+}
+
+.team-empty-state h2 {
+  font-size: 1.4rem;
+  font-weight: 800;
+  color: var(--text-primary);
+  margin: 0;
+}
+
+.team-empty-state p {
+  font-size: 0.92rem;
+  color: var(--text-secondary);
+  line-height: 1.6;
+  margin: 0;
+}
+
+.add-pokemon-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.75rem 2rem;
+  background: var(--accent-primary);
+  color: #fff;
+  border-radius: 2rem;
+  text-decoration: none;
+  font-weight: 700;
+  font-size: 0.95rem;
+  transition: transform 0.2s, opacity 0.2s;
+}
+
+.add-pokemon-btn:hover {
+  transform: translateY(-2px);
+  opacity: 0.95;
+}
+
+/* Team layout */
+.team-layout {
+  display: grid;
+  grid-template-columns: 1.2fr 1fr;
+  gap: 2rem;
+  align-items: start;
+}
+
+.team-section {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.team-section-title {
+  font-size: 1.25rem;
+  font-weight: 800;
+  color: var(--text-primary);
+  margin: 0;
+}
+
+/* Slots Grid */
+.team-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1rem;
+}
+
+.team-slot {
+  position: relative;
+  background: var(--card-bg);
+  border: 1px solid var(--border-color);
+  border-radius: 1.25rem;
+  transition: transform 0.2s, border-color 0.2s, box-shadow 0.2s;
+  overflow: hidden;
+}
+
+.team-slot--empty {
+  border-style: dashed;
+  height: 175px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0.5;
+}
+
+.empty-slot-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.empty-plus {
+  font-size: 2.2rem;
+  font-weight: 300;
+  color: var(--text-muted);
+}
+
+.empty-label {
+  font-size: 0.8rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--text-muted);
+}
+
+.team-slot--filled {
+  cursor: pointer;
+  height: 175px;
+}
+
+.team-slot--filled:hover {
+  transform: translateY(-3px);
+  border-color: var(--accent-primary);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+}
+
+.slot-card-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 1.25rem;
+  height: 100%;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.slot-number {
+  font-size: 0.8rem;
+  font-weight: 800;
+  color: var(--text-muted);
+  align-self: flex-start;
+  position: absolute;
+  top: 0.75rem;
+  left: 0.75rem;
+}
+
+.slot-sprite {
+  width: 75px;
+  height: 75px;
+  object-fit: contain;
+  filter: drop-shadow(0 4px 8px rgba(0,0,0,0.1));
+}
+
+.slot-name {
+  font-size: 1rem;
+  font-weight: 700;
+  text-transform: capitalize;
+  color: var(--text-primary);
+  margin: 0.5rem 0 0.4rem;
+}
+
+.slot-types {
+  display: flex;
+  gap: 0.35rem;
+  justify-content: center;
+}
+
+.remove-slot-btn {
+  position: absolute;
+  top: 0.5rem;
+  right: 0.5rem;
+  z-index: 10;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background: rgba(220, 38, 38, 0.15);
+  color: #ef4444;
+  border: none;
+  font-size: 1.1rem;
+  font-weight: 700;
+  line-height: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.remove-slot-btn:hover {
+  background: #dc2626;
+  color: #ffffff;
+  transform: scale(1.1);
+}
+
+/* Analysis Dashboard */
+.analysis-dashboard {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.analysis-card {
+  background: var(--card-bg);
+  border: 1px solid var(--border-color);
+  border-radius: 1.5rem;
+  padding: 1.5rem;
+}
+
+.analysis-card h3 {
+  font-size: 1.05rem;
+  font-weight: 800;
+  color: var(--text-primary);
+  margin: 0 0 1.25rem;
+  border-bottom: 1px solid var(--border-color);
+  padding-bottom: 0.5rem;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+}
+
+/* Stats Chart inside Analysis Card */
+.analysis-stats-chart {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.analysis-stats-chart .stat-row {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.analysis-stats-chart .stat-label {
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--text-muted);
+  width: 2.2rem;
+}
+
+.analysis-stats-chart .stat-bar-bg {
+  flex: 1;
+  height: 1.1rem;
+  background: var(--bg-primary);
+  border-radius: 1rem;
+  overflow: hidden;
+}
+
+.analysis-stats-chart .stat-bar-fill {
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  padding-right: 0.5rem;
+  box-sizing: border-box;
+  border-radius: 1rem;
+  transition: width 0.4s ease-out;
+}
+
+.analysis-stats-chart .stat-value {
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: #000;
+}
+
+.analysis-stats-total {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+  border-top: 1px dashed var(--border-color);
+  padding-top: 0.75rem;
+  margin-top: 0.5rem;
+}
+
+.analysis-stats-total strong {
+  font-size: 1.1rem;
+  color: var(--text-primary);
+  font-weight: 800;
+}
+
+/* Coverage Badges Grid */
+.coverage-section {
+  margin-bottom: 1.5rem;
+}
+
+.coverage-section:last-child {
+  margin-bottom: 0;
+}
+
+.coverage-section-title {
+  font-size: 0.88rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+  display: block;
+  margin-bottom: 0.25rem;
+}
+
+.weak-title {
+  color: #ff5555;
+}
+
+.resist-title {
+  color: #44aa77;
+}
+
+.coverage-desc {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  line-height: 1.4;
+  margin: 0 0 0.75rem;
+}
+
+.coverage-badges-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.coverage-neutral {
+  font-size: 0.82rem;
+  color: var(--text-muted);
+  font-style: italic;
+  margin: 0.5rem 0 0;
+}
+
+.coverage-badge-item {
+  display: flex;
+  align-items: center;
+  background: var(--bg-primary);
+  border: 1px solid var(--border-color);
+  border-radius: 1.5rem;
+  padding: 0.15rem 0.6rem 0.15rem 0.2rem;
+  gap: 0.4rem;
+}
+
+.coverage-badge-item .type-badge {
+  font-size: 0.65rem;
+  padding: 0.15rem 0.45rem;
+  margin: 0;
+}
+
+.coverage-counts {
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: var(--text-secondary);
+}
+
+/* High Contrast Mode Adjustments */
+[data-contrast='high'] .team-slot--empty {
+  border-color: #fff;
+  opacity: 1;
+}
+
+[data-contrast='high'] .team-slot--filled:hover {
+  border-color: var(--accent-primary);
+}
+
+[data-contrast='high'] .remove-slot-btn {
+  background: #000;
+  border: 1px solid #ff3333;
+}
+
+[data-contrast='high'] .remove-slot-btn:hover {
+  background: #ff3333;
+  color: #000;
+}
+
+[data-contrast='high'] .analysis-stats-chart .stat-value {
+  color: #ffffff;
+  text-shadow: 1px 1px 0 #000;
+}
+
+/* Responsiveness */
+@media (max-width: 900px) {
+  .team-layout {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+  }
+}
+
+@media (max-width: 550px) {
+  .team-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .team-slot, .team-slot--empty {
+    height: 150px;
+  }
+
+  .slot-sprite {
+    width: 65px;
+    height: 65px;
+  }
+}

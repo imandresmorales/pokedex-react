@@ -5,6 +5,7 @@ import Home from './pages/Home';
 import Detail from './pages/Detail';
 import Compare from './pages/Compare';
 import Quiz from './pages/Quiz';
+import Team from './pages/Team';
 import NotFound from './pages/NotFound';
 import CompareBar from './components/CompareBar/CompareBar';
 import ScrollToTop from './components/ScrollToTop/ScrollToTop';
@@ -46,6 +47,7 @@ function App() {
         <Route path="/pokemon/:id" element={<Detail />} />
         <Route path="/compare" element={<Compare />} />
         <Route path="/quiz" element={<Quiz />} />
+        <Route path="/team" element={<Team />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
       {/* Global components — visible on all routes */}

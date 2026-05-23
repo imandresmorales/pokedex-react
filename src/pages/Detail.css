@@ -198,6 +198,54 @@
   background: var(--border-color);
 }
 
+.detail-actions-row {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-top: 1rem;
+  margin-bottom: 1.25rem;
+}
+
+.detail-team-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1.25rem;
+  border-radius: 2rem;
+  background: var(--card-bg);
+  border: 1px solid var(--border-color);
+  color: var(--text-primary);
+  font-size: 0.85rem;
+  font-weight: 700;
+  cursor: pointer;
+  height: 40px;
+  transition: all 0.2s ease, background 0.3s ease;
+}
+
+.detail-team-btn:hover {
+  background: var(--hover-bg);
+  transform: translateY(-1px);
+}
+
+.detail-team-btn--active {
+  background: var(--accent-primary);
+  border-color: var(--accent-primary);
+  color: #fff;
+}
+
+.detail-team-btn--active:hover {
+  background: var(--accent-primary);
+  opacity: 0.9;
+}
+
+[data-contrast='high'] .detail-team-btn--active {
+  color: #000;
+}
+
+[data-theme='light'][data-contrast='high'] .detail-team-btn--active {
+  color: #fff;
+}
+
 /* Abilities */
 .abilities-list {
   display: flex;
@@ -377,6 +425,10 @@
   }
 
   .detail-types {
+    justify-content: center;
+  }
+
+  .detail-actions-row {
     justify-content: center;
   }
 

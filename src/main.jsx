@@ -9,6 +9,7 @@ import { ContrastProvider } from './context/ContrastContext.jsx'
 import { FontSizeProvider } from './context/FontSizeContext.jsx'
 import { LanguageProvider } from './context/LanguageContext.jsx'
 import { CompareProvider } from './context/CompareContext.jsx'
+import { TeamProvider } from './context/TeamContext.jsx'
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
@@ -19,7 +20,9 @@ createRoot(document.getElementById('root')).render(
             <LanguageProvider>
               <FavoritesProvider>
                 <CompareProvider>
-                  <App />
+                  <TeamProvider>
+                    <App />
+                  </TeamProvider>
                 </CompareProvider>
               </FavoritesProvider>
             </LanguageProvider>
