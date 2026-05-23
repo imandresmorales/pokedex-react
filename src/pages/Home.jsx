@@ -1,6 +1,7 @@
 import { useState, useMemo } from 'react';
 import { usePokemonList } from '../hooks/usePokemonList';
 import { useFavorites } from '../context/FavoritesContext';
+import { useLanguage } from '../context/LanguageContext';
 import PokemonCard from '../components/PokemonCard/PokemonCard';
 import SkeletonCard from '../components/SkeletonCard/SkeletonCard';
 import SearchBar from '../components/SearchBar/SearchBar';
@@ -20,6 +21,7 @@ export default function Home() {
   const [activeGenIndex, setActiveGenIndex] = useState(0);
   const { pokemon, loading, loadingMore, hasMore, loadMore } = usePokemonList(GENERATIONS[activeGenIndex]);
   const { favorites } = useFavorites();
+  const { language } = useLanguage();
   const [search, setSearch] = useState('');
   const [activeTypes, setActiveTypes] = useState([]);
   const [weightRange, setWeightRange] = useState({ min: 0, max: 500 });
@@ -27,6 +29,7 @@ export default function Home() {
   const [minHp, setMinHp] = useState(0);
   const [minAttack, setMinAttack] = useState(0);
   const [minSpeed, setMinSpeed] = useState(0);
+  const [sortBy, setSortBy] = useState('id-asc');
   const [activeTab, setActiveTab] = useState('all'); // 'all' | 'favorites'
 
   const sourceList = activeTab === 'favorites' ? favorites : pokemon;
@@ -38,6 +41,7 @@ export default function Home() {
     setMinHp(0);
     setMinAttack(0);
     setMinSpeed(0);
+    setSortBy('id-asc');
   };
 
   const filtered = useMemo(() => {
@@ -86,8 +90,40 @@ export default function Home() {
         return spdStat >= minSpeed;
       });
     }
-    return result;
-  }, [sourceList, search, activeTypes, weightRange, heightRange, minHp, minAttack, minSpeed]);
+
+    // Apply sorting
+    const sorted = [...result];
+    if (sortBy === 'id-asc') {
+      sorted.sort((a, b) => a.id - b.id);
+    } else if (sortBy === 'id-desc') {
+      sorted.sort((a, b) => b.id - a.id);
+    } else if (sortBy === 'name-asc') {
+      sorted.sort((a, b) => (a.localizedName || a.name).localeCompare(b.localizedName || b.name));
+    } else if (sortBy === 'name-desc') {
+      sorted.sort((a, b) => (b.localizedName || b.name).localeCompare(a.localizedName || a.name));
+    } else if (sortBy.startsWith('stat-')) {
+      const statName = sortBy.replace('stat-', '');
+      if (statName === 'total') {
+        sorted.sort((a, b) => {
+          const totalA = a.stats.reduce((sum, s) => sum + s.base_stat, 0);
+          const totalB = b.stats.reduce((sum, s) => sum + s.base_stat, 0);
+          return totalB - totalA;
+        });
+      } else {
+        sorted.sort((a, b) => {
+          const valA = a.stats.find(s => s.stat.name === statName)?.base_stat || 0;
+          const valB = b.stats.find(s => s.stat.name === statName)?.base_stat || 0;
+          return valB - valA;
+        });
+      }
+    } else if (sortBy === 'weight') {
+      sorted.sort((a, b) => b.weight - a.weight);
+    } else if (sortBy === 'height') {
+      sorted.sort((a, b) => b.height - a.height);
+    }
+
+    return sorted;
+  }, [sourceList, search, activeTypes, weightRange, heightRange, minHp, minAttack, minSpeed, sortBy]);
 
   const isAnyFilterActive =
     search ||
@@ -137,19 +173,44 @@ export default function Home() {
         </div>
 
         {activeTab === 'all' && (
-          <div className="generation-selector-wrapper">
-            <label htmlFor="gen-select" className="sr-only">Select Generation</label>
-            <select 
-              id="gen-select" 
-              className="gen-select"
-              value={activeGenIndex}
-              onChange={(e) => setActiveGenIndex(Number(e.target.value))}
-              aria-label="Filter by Generation"
-            >
-              {GENERATIONS.map((gen, idx) => (
-                <option key={gen.id} value={idx}>{gen.name}</option>
-              ))}
-            </select>
+          <div className="home-selectors-row">
+            <div className="generation-selector-wrapper">
+              <label htmlFor="gen-select" className="sr-only">Select Generation</label>
+              <select 
+                id="gen-select" 
+                className="gen-select"
+                value={activeGenIndex}
+                onChange={(e) => setActiveGenIndex(Number(e.target.value))}
+                aria-label="Filter by Generation"
+              >
+                {GENERATIONS.map((gen, idx) => (
+                  <option key={gen.id} value={idx}>{gen.name}</option>
+                ))}
+              </select>
+            </div>
+
+            <div className="sort-selector-wrapper">
+              <label htmlFor="sort-select" className="sr-only">Sort Pokémon</label>
+              <select
+                id="sort-select"
+                className="sort-select"
+                value={sortBy}
+                onChange={(e) => setSortBy(e.target.value)}
+                aria-label="Sort Pokémon"
+              >
+                <option value="id-asc">{language === 'es' ? 'Número (Menor a Mayor)' : 'Number (Low to High)'}</option>
+                <option value="id-desc">{language === 'es' ? 'Número (Mayor a Menor)' : 'Number (High to Low)'}</option>
+                <option value="name-asc">{language === 'es' ? 'Nombre (A-Z)' : 'Name (A-Z)'}</option>
+                <option value="name-desc">{language === 'es' ? 'Nombre (Z-A)' : 'Name (Z-A)'}</option>
+                <option value="stat-total">{language === 'es' ? 'Total Stats Base' : 'Base Stats Total'}</option>
+                <option value="stat-hp">{language === 'es' ? 'HP (Mayor)' : 'HP (Highest)'}</option>
+                <option value="stat-attack">{language === 'es' ? 'Ataque (Mayor)' : 'Attack (Highest)'}</option>
+                <option value="stat-defense">{language === 'es' ? 'Defensa (Mayor)' : 'Defense (Highest)'}</option>
+                <option value="stat-speed">{language === 'es' ? 'Velocidad (Mayor)' : 'Speed (Highest)'}</option>
+                <option value="weight">{language === 'es' ? 'Más Pesado' : 'Heaviest'}</option>
+                <option value="height">{language === 'es' ? 'Más Alto' : 'Tallest'}</option>
+              </select>
+            </div>
           </div>
         )}
 

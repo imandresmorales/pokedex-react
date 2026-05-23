@@ -283,18 +283,29 @@
   }
 }
 
-/* ===== Generation Selector ===== */
-.generation-selector-wrapper {
+/* ===== Selectors Row (Generation & Sorting) ===== */
+.home-selectors-row {
   display: flex;
   justify-content: center;
+  gap: 1rem;
   margin-bottom: 1.5rem;
-  padding: 0 1rem;
+  padding: 0 1.5rem;
+  flex-wrap: wrap;
 }
 
-.gen-select {
+.home-selectors-row .generation-selector-wrapper,
+.home-selectors-row .sort-selector-wrapper {
+  margin-bottom: 0;
+  padding: 0;
+  flex: 1;
+  max-width: 300px;
+  min-width: 200px;
+}
+
+.gen-select,
+.sort-select {
   width: 100%;
-  max-width: 400px;
-  padding: 0.75rem 1rem;
+  padding: 0.75rem 2.2rem 0.75rem 1rem;
   font-size: 1rem;
   font-weight: 600;
   color: var(--text-primary);
@@ -310,11 +321,13 @@
   transition: border-color 0.2s ease, box-shadow 0.2s ease;
 }
 
-.gen-select:hover {
+.gen-select:hover,
+.sort-select:hover {
   border-color: var(--text-muted);
 }
 
-.gen-select:focus-visible {
+.gen-select:focus-visible,
+.sort-select:focus-visible {
   outline: none;
   border-color: var(--accent-primary);
   box-shadow: 0 0 0 3px var(--accent-glow);
