@@ -21,10 +21,24 @@ export default function Home() {
   const { pokemon, loading, loadingMore, hasMore, loadMore } = usePokemonList(GENERATIONS[activeGenIndex]);
   const { favorites } = useFavorites();
   const [search, setSearch] = useState('');
-  const [activeType, setActiveType] = useState(null);
+  const [activeTypes, setActiveTypes] = useState([]);
+  const [weightRange, setWeightRange] = useState({ min: 0, max: 500 });
+  const [heightRange, setHeightRange] = useState({ min: 0, max: 10 });
+  const [minHp, setMinHp] = useState(0);
+  const [minAttack, setMinAttack] = useState(0);
+  const [minSpeed, setMinSpeed] = useState(0);
   const [activeTab, setActiveTab] = useState('all'); // 'all' | 'favorites'
 
   const sourceList = activeTab === 'favorites' ? favorites : pokemon;
+
+  const handleResetFilters = () => {
+    setActiveTypes([]);
+    setWeightRange({ min: 0, max: 500 });
+    setHeightRange({ min: 0, max: 10 });
+    setMinHp(0);
+    setMinAttack(0);
+    setMinSpeed(0);
+  };
 
   const filtered = useMemo(() => {
     let result = sourceList;
@@ -37,14 +51,57 @@ export default function Home() {
           String(p.id).padStart(3, '0').includes(term)
       );
     }
-    if (activeType) {
-      result = result.filter((p) => p.types.includes(activeType));
+    if (activeTypes.length > 0) {
+      result = result.filter((p) =>
+        activeTypes.every((type) => p.types.includes(type))
+      );
+    }
+    if (weightRange.min > 0 || weightRange.max < 500) {
+      result = result.filter((p) => {
+        const kg = p.weight / 10;
+        return kg >= weightRange.min && (weightRange.max === 500 || kg <= weightRange.max);
+      });
+    }
+    if (heightRange.min > 0 || heightRange.max < 10) {
+      result = result.filter((p) => {
+        const m = p.height / 10;
+        return m >= heightRange.min && (heightRange.max === 10 || m <= heightRange.max);
+      });
+    }
+    if (minHp > 0) {
+      result = result.filter((p) => {
+        const hpStat = p.stats.find((s) => s.stat.name === 'hp')?.base_stat || 0;
+        return hpStat >= minHp;
+      });
+    }
+    if (minAttack > 0) {
+      result = result.filter((p) => {
+        const atkStat = p.stats.find((s) => s.stat.name === 'attack')?.base_stat || 0;
+        return atkStat >= minAttack;
+      });
+    }
+    if (minSpeed > 0) {
+      result = result.filter((p) => {
+        const spdStat = p.stats.find((s) => s.stat.name === 'speed')?.base_stat || 0;
+        return spdStat >= minSpeed;
+      });
     }
     return result;
-  }, [sourceList, search, activeType]);
+  }, [sourceList, search, activeTypes, weightRange, heightRange, minHp, minAttack, minSpeed]);
+
+  const isAnyFilterActive =
+    search ||
+    activeTypes.length > 0 ||
+    weightRange.min > 0 ||
+    weightRange.max < 500 ||
+    heightRange.min > 0 ||
+    heightRange.max < 10 ||
+    minHp > 0 ||
+    minAttack > 0 ||
+    minSpeed > 0;
 
   const showLoadMore =
-    activeTab === 'all' && hasMore && !search && !activeType;
+    activeTab === 'all' && hasMore && !isAnyFilterActive;
 
   return (
     <>
@@ -100,9 +157,20 @@ export default function Home() {
           <SearchBar
             value={search}
             onChange={setSearch}
-            onTypeFilter={setActiveType}
+            onTypeFilter={setActiveTypes}
             types={ALL_TYPES}
-            activeType={activeType}
+            activeTypes={activeTypes}
+            weightRange={weightRange}
+            onWeightRangeChange={setWeightRange}
+            heightRange={heightRange}
+            onHeightRangeChange={setHeightRange}
+            minHp={minHp}
+            onMinHpChange={setMinHp}
+            minAttack={minAttack}
+            onMinAttackChange={setMinAttack}
+            minSpeed={minSpeed}
+            onMinSpeedChange={setMinSpeed}
+            onResetFilters={handleResetFilters}
           />
         </div>
 
@@ -130,7 +198,7 @@ export default function Home() {
               className="pokemon-grid"
               id="pokemon-grid"
               role="list"
-              aria-label={`${filtered.length} Pokémon${activeType ? ` of type ${activeType}` : ''}`}
+              aria-label={`${filtered.length} Pokémon${activeTypes.length > 0 ? ` of type ${activeTypes.join(' and ')}` : ''}`}
             >
               {filtered.map((p, i) => (
                 <div key={p.id} role="listitem">
