@@ -4,6 +4,7 @@ import { usePokemonDetail } from '../hooks/usePokemonDetail';
 import { usePageTransition } from '../hooks/usePageTransition';
 import { useEvolutionChain } from '../hooks/useEvolutionChain';
 import { useSwipeNavigation } from '../hooks/useSwipeNavigation';
+import { useLanguage } from '../context/LanguageContext';
 import TypeBadge from '../components/TypeBadge/TypeBadge';
 import StatsChart from '../components/StatsChart/StatsChart';
 import EvolutionChain from '../components/EvolutionChain/EvolutionChain';
@@ -11,23 +12,59 @@ import CryButton from '../components/CryButton/CryButton';
 import { DetailSeo } from '../components/Seo/Seo';
 import { typeColors } from '../utils/typeColors';
 import { formatMeasurement, formatNumber } from '../utils/formatters';
+import { getTypeMatchups } from '../utils/typeMatchups';
 import './Detail.css';
+
+const TRANSLATIONS = {
+  en: {
+    about: 'About',
+    abilities: 'Abilities',
+    stats: 'Base Stats',
+    total: 'Total',
+    evolution: 'Evolution Chain',
+    effectiveness: 'Type Effectiveness',
+    weak4x: 'Weakness (4x)',
+    weak2x: 'Weakness (2x)',
+    resistHalf: 'Resistance (0.5x)',
+    resistQuarter: 'Resistance (0.25x)',
+    immune: 'Immune (0x)',
+    height: 'Height',
+    weight: 'Weight',
+    baseExp: 'Base Exp',
+    hidden: 'Hidden',
+  },
+  es: {
+    about: 'Acerca de',
+    abilities: 'Habilidades',
+    stats: 'Estadísticas Base',
+    total: 'Total',
+    evolution: 'Cadena Evolutiva',
+    effectiveness: 'Efectividad de Tipos',
+    weak4x: 'Debilidad (4x)',
+    weak2x: 'Debilidad (2x)',
+    resistHalf: 'Resistencia (0.5x)',
+    resistQuarter: 'Resistencia (0.25x)',
+    immune: 'Inmune (0x)',
+    height: 'Altura',
+    weight: 'Peso',
+    baseExp: 'Exp. Base',
+    hidden: 'Oculta',
+  }
+};
 
 export default function Detail() {
   const { id } = useParams();
   const { pokemon, species, loading, error } = usePokemonDetail(id);
   const { chain } = useEvolutionChain(id);
+  const { language } = useLanguage();
   const headingRef = useRef(null);
   const location = useLocation();
-  // Hooks must always be called unconditionally — before any early return.
   const navigateTo = usePageTransition();
+
+  const t = TRANSLATIONS[language] || TRANSLATIONS.en;
 
   /**
    * Move keyboard focus to the Pokémon name heading whenever the route changes.
-   * This ensures screen reader users hear the new page title immediately
-   * instead of staying on the previously focused element.
-   * tabIndex="-1" on the h1 allows programmatic focus without adding it
-   * to the natural tab order.
    */
   useEffect(() => {
     if (headingRef.current) {
@@ -35,14 +72,9 @@ export default function Detail() {
     }
   }, [location.pathname]);
 
-  // Compute nav targets (null when at boundary) — safe to derive here since
-  // pokemon may be null before data loads, so we guard with optional chaining.
   const prevId = pokemon && pokemon.id > 1 ? pokemon.id - 1 : null;
   const nextId = pokemon && pokemon.id < 1025 ? pokemon.id + 1 : null;
 
-  // Swipe left = next, swipe right = previous (mirrors natural reading direction).
-  // useSwipeNavigation must be called unconditionally; undefined callbacks are
-  // treated as no-ops inside the hook.
   const { handlers: swipeHandlers } = useSwipeNavigation({
     onSwipeLeft:  nextId ? () => navigateTo(`/pokemon/${nextId}`) : undefined,
     onSwipeRight: prevId ? () => navigateTo(`/pokemon/${prevId}`) : undefined,
@@ -73,6 +105,18 @@ export default function Detail() {
 
   const primaryType = pokemon.types[0].type.name;
   const typeColor = typeColors[primaryType]?.bg || '#777';
+
+  // Calculate type effectiveness matchups
+  const { weak4x, weak2x, resistHalf, resistQuarter, immune0x } = getTypeMatchups(
+    pokemon.types.map((t) => t.type.name)
+  );
+
+  const hasEffectiveness =
+    weak4x.length > 0 ||
+    weak2x.length > 0 ||
+    resistHalf.length > 0 ||
+    resistQuarter.length > 0 ||
+    immune0x.length > 0;
 
   return (
     <main
@@ -127,8 +171,6 @@ export default function Detail() {
               tabIndex="-1"
               id="pokemon-heading"
             >
-              {/* Use the localized name from species data when available.
-                  Falls back to the English romanized name from the pokemon endpoint. */}
               {species?.localizedName || pokemon.name}
             </h1>
             {species?.genus && (
@@ -155,34 +197,34 @@ export default function Detail() {
       <div className="detail-content">
         {/* Description */}
         <section className="detail-section" id="description-section">
-          <h2 className="section-title">About</h2>
+          <h2 className="section-title">{t.about}</h2>
           <p className="detail-description">{species?.description}</p>
           <div className="detail-physical">
             <div className="physical-item">
               <span className="physical-value">{formatMeasurement(pokemon.height, 'meter')}</span>
-              <span className="physical-label">Height</span>
+              <span className="physical-label">{t.height}</span>
             </div>
             <div className="physical-divider"></div>
             <div className="physical-item">
               <span className="physical-value">{formatMeasurement(pokemon.weight, 'kilogram')}</span>
-              <span className="physical-label">Weight</span>
+              <span className="physical-label">{t.weight}</span>
             </div>
             <div className="physical-divider"></div>
             <div className="physical-item">
               <span className="physical-value">{formatNumber(pokemon.base_experience)}</span>
-              <span className="physical-label">Base Exp</span>
+              <span className="physical-label">{t.baseExp}</span>
             </div>
           </div>
         </section>
 
         {/* Abilities */}
         <section className="detail-section" id="abilities-section">
-          <h2 className="section-title">Abilities</h2>
+          <h2 className="section-title">{t.abilities}</h2>
           <div className="abilities-list">
             {pokemon.abilities.map((a) => (
               <span key={a.ability.name} className={`ability-chip ${a.is_hidden ? 'hidden-ability' : ''}`}>
                 {a.ability.name.replace('-', ' ')}
-                {a.is_hidden && <span className="hidden-tag">Hidden</span>}
+                {a.is_hidden && <span className="hidden-tag">{t.hidden}</span>}
               </span>
             ))}
           </div>
@@ -190,18 +232,78 @@ export default function Detail() {
 
         {/* Stats */}
         <section className="detail-section" id="stats-section">
-          <h2 className="section-title">Base Stats</h2>
+          <h2 className="section-title">{t.stats}</h2>
           <StatsChart stats={pokemon.stats} />
           <div className="stats-total">
-            <span className="total-label">Total</span>
+            <span className="total-label">{t.total}</span>
             <span className="total-value">
               {pokemon.stats.reduce((sum, s) => sum + s.base_stat, 0)}
             </span>
           </div>
         </section>
+
+        {/* Type Effectiveness */}
+        {hasEffectiveness && (
+          <section className="detail-section" id="effectiveness-section">
+            <h2 className="section-title">{t.effectiveness}</h2>
+            <div className="effectiveness-groups">
+              {weak4x.length > 0 && (
+                <div className="eff-group">
+                  <span className="eff-label eff-label--weak4x">{t.weak4x}</span>
+                  <div className="eff-badges">
+                    {weak4x.map((type) => (
+                      <TypeBadge key={type} type={type} />
+                    ))}
+                  </div>
+                </div>
+              )}
+              {weak2x.length > 0 && (
+                <div className="eff-group">
+                  <span className="eff-label eff-label--weak2x">{t.weak2x}</span>
+                  <div className="eff-badges">
+                    {weak2x.map((type) => (
+                      <TypeBadge key={type} type={type} />
+                    ))}
+                  </div>
+                </div>
+              )}
+              {resistHalf.length > 0 && (
+                <div className="eff-group">
+                  <span className="eff-label eff-label--resistHalf">{t.resistHalf}</span>
+                  <div className="eff-badges">
+                    {resistHalf.map((type) => (
+                      <TypeBadge key={type} type={type} />
+                    ))}
+                  </div>
+                </div>
+              )}
+              {resistQuarter.length > 0 && (
+                <div className="eff-group">
+                  <span className="eff-label eff-label--resistQuarter">{t.resistQuarter}</span>
+                  <div className="eff-badges">
+                    {resistQuarter.map((type) => (
+                      <TypeBadge key={type} type={type} />
+                    ))}
+                  </div>
+                </div>
+              )}
+              {immune0x.length > 0 && (
+                <div className="eff-group">
+                  <span className="eff-label eff-label--immune">{t.immune}</span>
+                  <div className="eff-badges">
+                    {immune0x.map((type) => (
+                      <TypeBadge key={type} type={type} />
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
+          </section>
+        )}
+
         {/* Evolution Chain */}
         <section className="detail-section" id="evolution-section">
-          <h2 className="section-title">Evolution Chain</h2>
+          <h2 className="section-title">{t.evolution}</h2>
           <EvolutionChain chain={chain} currentId={pokemon.id} />
         </section>
       </div>

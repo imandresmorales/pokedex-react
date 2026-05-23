@@ -19,9 +19,15 @@ export function launchConfetti(originEl, { count = 18, colors } = {}) {
     '#ec4899', '#ffffff',
   ];
 
-  const rect = originEl.getBoundingClientRect();
-  const cx = rect.left + rect.width / 2;
-  const cy = rect.top + rect.height / 2 + window.scrollY;
+  let cx, cy;
+  if (originEl && typeof originEl.getBoundingClientRect === 'function') {
+    const rect = originEl.getBoundingClientRect();
+    cx = rect.left + rect.width / 2;
+    cy = rect.top + rect.height / 2 + window.scrollY;
+  } else {
+    cx = window.innerWidth / 2;
+    cy = window.innerHeight / 2 + window.scrollY;
+  }
 
   const container = document.createElement('div');
   container.setAttribute('aria-hidden', 'true');
@@ -81,4 +87,8 @@ export function launchConfetti(originEl, { count = 18, colors } = {}) {
 
   // Clean up after animation
   setTimeout(() => container.remove(), 900);
+}
+
+export function fireConfetti() {
+  launchConfetti(null, { count: 32 });
 }
