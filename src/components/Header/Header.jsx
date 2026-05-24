@@ -4,6 +4,7 @@ import { useContrast } from '../../context/ContrastContext';
 import { useFontSize } from '../../context/FontSizeContext';
 import { useLanguage } from '../../context/LanguageContext';
 import { useTeam } from '../../context/TeamContext';
+import { useMotion } from '../../context/MotionContext';
 import './Header.css';
 
 export default function Header() {
@@ -11,6 +12,7 @@ export default function Header() {
   const { canIncrease, canDecrease, increase, decrease, reset, sizeIndex } = useFontSize();
   const { language, toggleLanguage } = useLanguage();
   const { team } = useTeam();
+  const { isReduced, toggleMotion } = useMotion();
 
   return (
     <header className="app-header" id="app-header">
@@ -85,6 +87,23 @@ export default function Header() {
               A<sup>+</sup>
             </button>
           </div>
+
+          {/* Motion toggle */}
+          <button
+            className={`motion-btn ${isReduced ? 'motion-btn--active' : ''}`}
+            onClick={toggleMotion}
+            aria-pressed={isReduced}
+            aria-label={isReduced ? 'Enable normal motion animations' : 'Reduce motion and animations'}
+            title={isReduced ? (language === 'en' ? 'Motion: Reduced' : 'Animaciones: Reducidas') : (language === 'en' ? 'Motion: Normal' : 'Animaciones: Normales')}
+            type="button"
+            id="motion-toggle"
+          >
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" width="16" height="16">
+              <path d="M5 12h14" />
+              <path d="M12 18h7" />
+              <path d="M8 6h11" />
+            </svg>
+          </button>
 
           {/* High contrast toggle */}
           <button

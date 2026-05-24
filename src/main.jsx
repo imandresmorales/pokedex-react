@@ -10,6 +10,7 @@ import { FontSizeProvider } from './context/FontSizeContext.jsx'
 import { LanguageProvider } from './context/LanguageContext.jsx'
 import { CompareProvider } from './context/CompareContext.jsx'
 import { TeamProvider } from './context/TeamContext.jsx'
+import { MotionProvider } from './context/MotionContext.jsx'
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
@@ -21,7 +22,9 @@ createRoot(document.getElementById('root')).render(
               <FavoritesProvider>
                 <CompareProvider>
                   <TeamProvider>
-                    <App />
+                    <MotionProvider>
+                      <App />
+                    </MotionProvider>
                   </TeamProvider>
                 </CompareProvider>
               </FavoritesProvider>

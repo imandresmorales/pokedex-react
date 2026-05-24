@@ -165,6 +165,45 @@
   outline-offset: 2px;
 }
 
+/* Motion toggle button */
+.motion-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: 1px solid var(--border-color);
+  background: var(--hover-bg);
+  color: var(--text-secondary);
+  cursor: pointer;
+  font-family: inherit;
+  transition: all 0.2s ease, background 0.3s ease;
+  flex-shrink: 0;
+}
+
+.motion-btn svg {
+  width: 18px;
+  height: 18px;
+}
+
+.motion-btn:hover {
+  color: var(--accent-primary);
+  border-color: var(--accent-primary);
+  transform: scale(1.08);
+}
+
+.motion-btn--active {
+  color: var(--accent-primary);
+  border-color: var(--accent-primary);
+  background: rgba(220, 38, 38, 0.08);
+}
+
+.motion-btn:focus-visible {
+  outline: 2px solid var(--accent-primary);
+  outline-offset: 2px;
+}
+
 /* Font size controls */
 .font-size-controls {
   display: flex;

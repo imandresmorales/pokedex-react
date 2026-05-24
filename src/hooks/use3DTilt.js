@@ -1,4 +1,5 @@
 import { useRef, useCallback } from 'react';
+import { useMotion } from '../context/MotionContext';
 
 /**
  * Hook that adds a CSS 3D tilt effect driven by mouse position.
@@ -16,11 +17,10 @@ import { useRef, useCallback } from 'react';
  */
 export function use3DTilt({ maxTilt = 12, scale = 1.04 } = {}) {
   const ref = useRef(null);
+  const { isReduced } = useMotion();
 
-  // Respect the user's motion preference — check once at hook init
-  const reducedMotion =
-    typeof window !== 'undefined' &&
-    window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  // Respect the user's motion preference (either context or system media query)
+  const reducedMotion = isReduced;
 
   const handleMouseMove = useCallback(
     (e) => {
