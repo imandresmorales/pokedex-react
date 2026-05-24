@@ -492,3 +492,162 @@
   0%   { opacity: 0.7; }
   100% { opacity: 0; }
 }
+
+/* Breeding and Capture details */
+.detail-breeding-capture {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+  margin-top: 1rem;
+  padding: 1.25rem;
+  background: var(--card-bg);
+  border: 1px solid var(--border-color);
+  border-radius: 1rem;
+}
+
+.breeding-capture-item {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.info-label {
+  font-size: 0.72rem;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-weight: 700;
+}
+
+.gender-genderless {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+}
+
+.gender-ratio-container {
+  width: 100%;
+}
+
+.gender-bar {
+  display: flex;
+  height: 20px;
+  border-radius: 10px;
+  overflow: hidden;
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: #fff;
+  text-shadow: 0 1px 2px rgba(0,0,0,0.2);
+}
+
+.gender-bar-male {
+  background: linear-gradient(90deg, #4299e1, #3182ce);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: width 0.3s ease;
+}
+
+.gender-bar-female {
+  background: linear-gradient(90deg, #ed64a6, #d53f8c);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: width 0.3s ease;
+}
+
+.catch-rate-display {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.catch-rate-value {
+  font-size: 1.1rem;
+  font-weight: 800;
+  color: var(--text-primary);
+}
+
+.catch-rate-percent {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  font-weight: 500;
+}
+
+.catch-rate-bar-container {
+  width: 100%;
+  height: 6px;
+  background: var(--border-color);
+  border-radius: 3px;
+  overflow: hidden;
+  margin-top: 0.25rem;
+}
+
+.catch-rate-bar {
+  height: 100%;
+  background: var(--accent-primary);
+  border-radius: 3px;
+  transition: width 0.3s ease;
+}
+
+/* Wild Encounters */
+.encounters-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.encounter-item {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem 1rem;
+  background: var(--card-bg);
+  border: 1px solid var(--border-color);
+  border-radius: 0.75rem;
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  transition: transform 0.2s, background-color 0.2s;
+}
+
+.encounter-item:hover {
+  background: var(--hover-bg);
+  transform: translateX(4px);
+}
+
+.encounter-icon {
+  color: var(--accent-primary);
+  flex-shrink: 0;
+}
+
+.no-encounters {
+  font-size: 0.95rem;
+  color: var(--text-muted);
+  font-style: italic;
+}
+
+.encounters-loading-spinner {
+  width: 30px;
+  height: 30px;
+  border: 3px solid var(--border-color);
+  border-top-color: var(--accent-primary);
+  border-radius: 50%;
+  animation: encountersSpin 1s linear infinite;
+  margin: 1rem auto;
+}
+
+@keyframes encountersSpin {
+  to { transform: rotate(360deg); }
+}
+
+@media (max-width: 640px) {
+  .detail-breeding-capture {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+}
+

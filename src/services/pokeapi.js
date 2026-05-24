@@ -159,3 +159,10 @@ export function parseEvolutionChain(chain) {
 export async function fetchMoveDetails(url) {
   return cachedFetch(url);
 }
+
+/**
+ * Fetch encounter areas for a Pokémon
+ */
+export async function fetchPokemonEncounters(pokemonId) {
+  return cachedFetch(`${BASE_URL}/pokemon/${pokemonId}/encounters`);
+}

@@ -1,5 +1,6 @@
 import { useParams, Link, useLocation } from 'react-router-dom';
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
+import { fetchPokemonEncounters } from '../services/pokeapi';
 import { usePokemonDetail } from '../hooks/usePokemonDetail';
 import { usePageTransition } from '../hooks/usePageTransition';
 import { useEvolutionChain } from '../hooks/useEvolutionChain';
@@ -37,6 +38,13 @@ const TRANSLATIONS = {
     addToTeam: 'Add to Team',
     removeFromTeam: 'Remove from Team',
     teamFull: 'Your team is full! (Max 6)',
+    genderRatio: 'Gender Ratio',
+    catchRate: 'Catch Rate',
+    male: 'Male',
+    female: 'Female',
+    genderless: 'Genderless',
+    wildLocations: 'Wild Encounters',
+    noLocations: 'Only via evolution, trade or special event',
   },
   es: {
     about: 'Acerca de',
@@ -57,7 +65,22 @@ const TRANSLATIONS = {
     addToTeam: 'Añadir al Equipo',
     removeFromTeam: 'Quitar del Equipo',
     teamFull: '¡Tu equipo está lleno! (Máximo 6)',
+    genderRatio: 'Ratio de Género',
+    catchRate: 'Tasa de Captura',
+    male: 'Macho',
+    female: 'Hembra',
+    genderless: 'Sin género',
+    wildLocations: 'Encuentros Salvajes',
+    noLocations: 'Solo mediante evolución, intercambio o evento especial',
   }
+};
+
+const formatLocationName = (name) => {
+  if (!name) return '';
+  return name
+    .split('-')
+    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+    .join(' ');
 };
 
 export default function Detail() {
@@ -69,6 +92,8 @@ export default function Detail() {
   const headingRef = useRef(null);
   const location = useLocation();
   const navigateTo = usePageTransition();
+  const [encounters, setEncounters] = useState([]);
+  const [encountersLoading, setEncountersLoading] = useState(true);
 
   const t = TRANSLATIONS[language] || TRANSLATIONS.en;
   const inTeam = pokemon ? isInTeam(pokemon.id) : false;
@@ -81,6 +106,23 @@ export default function Detail() {
       headingRef.current.focus({ preventScroll: false });
     }
   }, [location.pathname]);
+
+  useEffect(() => {
+    if (!id) return;
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setEncountersLoading(true);
+    fetchPokemonEncounters(id)
+      .then((data) => {
+        setEncounters(data || []);
+      })
+      .catch((err) => {
+        console.error('Error fetching encounters:', err);
+        setEncounters([]);
+      })
+      .finally(() => {
+        setEncountersLoading(false);
+      });
+  }, [id]);
 
   const prevId = pokemon && pokemon.id > 1 ? pokemon.id - 1 : null;
   const nextId = pokemon && pokemon.id < 1025 ? pokemon.id + 1 : null;
@@ -245,6 +287,48 @@ export default function Detail() {
               <span className="physical-label">{t.baseExp}</span>
             </div>
           </div>
+
+          {species && (
+            <div className="detail-breeding-capture">
+              <div className="breeding-capture-item">
+                <span className="info-label">{t.genderRatio}</span>
+                {species.gender_rate === -1 ? (
+                  <span className="gender-genderless">{t.genderless}</span>
+                ) : (
+                  <div className="gender-ratio-container">
+                    <div className="gender-bar">
+                      <div 
+                        className="gender-bar-male" 
+                        style={{ width: `${100 - (species.gender_rate / 8) * 100}%` }}
+                        title={`${t.male}: ${100 - (species.gender_rate / 8) * 100}%`}
+                      >
+                        <span>{100 - (species.gender_rate / 8) * 100}% ♂</span>
+                      </div>
+                      <div 
+                        className="gender-bar-female" 
+                        style={{ width: `${(species.gender_rate / 8) * 100}%` }}
+                        title={`${t.female}: ${(species.gender_rate / 8) * 100}%`}
+                      >
+                        <span>{(species.gender_rate / 8) * 100}% ♀</span>
+                      </div>
+                    </div>
+                  </div>
+                )}
+              </div>
+              <div className="breeding-capture-item">
+                <span className="info-label">{t.catchRate}</span>
+                <div className="catch-rate-display">
+                  <span className="catch-rate-value">{species.capture_rate}</span>
+                  <span className="catch-rate-percent">
+                    ({((species.capture_rate / 765) * 100).toFixed(1)}%)
+                  </span>
+                  <div className="catch-rate-bar-container">
+                    <div className="catch-rate-bar" style={{ width: `${(species.capture_rate / 255) * 100}%` }}></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
         </section>
 
         {/* Abilities */}
@@ -334,6 +418,28 @@ export default function Detail() {
         {/* Moves List */}
         <section className="detail-section" id="moves-section">
           <MovesList moves={pokemon.moves} />
+        </section>
+
+        {/* Wild Encounters */}
+        <section className="detail-section" id="encounters-section">
+          <h2 className="section-title">{t.wildLocations}</h2>
+          {encountersLoading ? (
+            <div className="encounters-loading-spinner" aria-label="Loading encounters"></div>
+          ) : encounters.length > 0 ? (
+            <ul className="encounters-list">
+              {encounters.slice(0, 5).map((enc) => (
+                <li key={enc.location_area.name} className="encounter-item">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" width="16" height="16" className="encounter-icon" aria-hidden="true">
+                    <path d="M12 2a8 8 0 0 0-8 8c0 5.25 8 12 8 12s8-6.75 8-12a8 8 0 0 0-8-8z" />
+                    <circle cx="12" cy="10" r="3" />
+                  </svg>
+                  <span>{formatLocationName(enc.location_area.name)}</span>
+                </li>
+              ))}
+            </ul>
+          ) : (
+            <p className="no-encounters">{t.noLocations}</p>
+          )}
         </section>
 
         {/* Evolution Chain */}
