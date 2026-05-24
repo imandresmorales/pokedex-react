@@ -10,6 +10,7 @@ import TypeBadge from '../components/TypeBadge/TypeBadge';
 import StatsChart from '../components/StatsChart/StatsChart';
 import EvolutionChain from '../components/EvolutionChain/EvolutionChain';
 import CryButton from '../components/CryButton/CryButton';
+import MovesList from '../components/MovesList/MovesList';
 import { DetailSeo } from '../components/Seo/Seo';
 import { typeColors } from '../utils/typeColors';
 import { formatMeasurement, formatNumber } from '../utils/formatters';
@@ -329,6 +330,11 @@ export default function Detail() {
             </div>
           </section>
         )}
+
+        {/* Moves List */}
+        <section className="detail-section" id="moves-section">
+          <MovesList moves={pokemon.moves} />
+        </section>
 
         {/* Evolution Chain */}
         <section className="detail-section" id="evolution-section">

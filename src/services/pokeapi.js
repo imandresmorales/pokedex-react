@@ -152,3 +152,10 @@ export function parseEvolutionChain(chain) {
   traverse(chain);
   return stages;
 }
+
+/**
+ * Fetch detailed data for a move
+ */
+export async function fetchMoveDetails(url) {
+  return cachedFetch(url);
+}
